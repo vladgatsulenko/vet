@@ -4,7 +4,7 @@ WORKDIR /var/www/html
 
 RUN apt update \
     && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip nano libxml2-dev \
-    && docker-php-ext-install intl opcache pdo pdo_mysql dom \
+    && docker-php-ext-install intl opcache pdo pdo_mysql dom xml \
     && pecl install apcu xdebug \
     && docker-php-ext-enable apcu xdebug \
     && docker-php-ext-configure zip \
