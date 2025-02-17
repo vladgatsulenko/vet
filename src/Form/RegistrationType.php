@@ -8,6 +8,13 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use ZxcvbnPhp\Zxcvbn;
 
 class RegistrationType extends AbstractType
 {
@@ -15,13 +22,55 @@ class RegistrationType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class,[
-                'label' => 'Emal'
+                'label' => 'Emal',
+                
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Поле email не должно быть пустым.',
+                    ]),
+                    new Email([
+                        'message' => 'Введите корректный email.',
+                    ]),
+                ],
+
+                
             ])
 
             ->add('password', PasswordType::class, [
-                'label' => 'Password'
-            ])
-        ;
+                'label' => 'Password',
+
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Поле пароль не должно быть пустым.',
+                    ]),
+                    new Length([
+                        'min' => 8,
+                        'minMessage' => 'Пароль должен содержать минимум {{ limit }} символов.',
+                        'max' => 999,    
+                    ]),
+                    new Regex([
+                        'pattern' => '/^\S+$/',  
+                        'message' => 'Пароль не должен содержать пробелы.',
+                    ]),
+                    new Callback([
+                        'callback' => function ($value, ExecutionContextInterface $context) {
+                           
+                            if (empty($value) || strlen($value) < 8) {
+                                return; 
+                            }
+
+                            $zxcvbn = new Zxcvbn();
+                            $result = $zxcvbn->passwordStrength($value);
+
+                            if ($result['score'] < 3) {
+                                $context->buildViolation('Пароль слишком слабый, придумайте более сложный пароль.')
+                                    ->addViolation();
+                            }
+                        },
+                    ]),
+                ],
+
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
