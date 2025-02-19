@@ -12,9 +12,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Callback;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
-use ZxcvbnPhp\Zxcvbn;
 
 class RegistrationType extends AbstractType
 {
@@ -52,21 +49,17 @@ class RegistrationType extends AbstractType
                         'pattern' => '/^\S+$/',  
                         'message' => 'Пароль не должен содержать пробелы.',
                     ]),
-                    new Callback([
-                        'callback' => function ($value, ExecutionContextInterface $context) {
-                           
-                            if (empty($value) || strlen($value) < 8) {
-                                return; 
-                            }
-
-                            $zxcvbn = new Zxcvbn();
-                            $result = $zxcvbn->passwordStrength($value);
-
-                            if ($result['score'] < 3) {
-                                $context->buildViolation('Пароль слишком слабый, придумайте более сложный пароль.')
-                                    ->addViolation();
-                            }
-                        },
+                    new Regex([
+                        'pattern' => '/\d/',
+                        'message' => 'Пароль должен содержать хотя бы одну цифру.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/[A-Z]/',
+                        'message' => 'Пароль должен содержать хотя бы одну заглавную букву.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/[!@#$%^&*(),.?":{}|<>]/',
+                        'message' => 'Пароль должен содержать хотя бы один спецсимвол.',
                     ]),
                 ],
 
