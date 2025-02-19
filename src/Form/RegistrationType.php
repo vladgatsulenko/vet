@@ -54,7 +54,7 @@ class RegistrationType extends AbstractType
                         'message' => 'Пароль должен содержать хотя бы одну цифру.',
                     ]),
                     new Regex([
-                        'pattern' => '/[A-Z]/',
+                        'pattern' => '/(?=.*[A-ZА-Я])/u',
                         'message' => 'Пароль должен содержать хотя бы одну заглавную букву.',
                     ]),
                     new Regex([
