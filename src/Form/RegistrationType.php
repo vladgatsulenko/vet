@@ -17,25 +17,20 @@ class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('email', EmailType::class,[
-                'label' => 'Emal',
-                
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Поле email не должно быть пустым.',
-                    ]),
-                    new Email([
-                        'message' => 'Введите корректный email.',
-                    ]),
-                ],
-
-                
-            ])
+        $builder->add('email', EmailType::class, [
+            'label' => 'Emal',
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'Поле email не должно быть пустым.',
+                ]),
+                new Email([
+                    'message' => 'Введите корректный email.',
+                ]),
+            ],
+        ])
 
             ->add('password', PasswordType::class, [
                 'label' => 'Password',
-
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Поле пароль не должно быть пустым.',
@@ -43,10 +38,10 @@ class RegistrationType extends AbstractType
                     new Length([
                         'min' => 8,
                         'minMessage' => 'Пароль должен содержать минимум {{ limit }} символов.',
-                        'max' => 999,    
+                        'max' => 999,
                     ]),
                     new Regex([
-                        'pattern' => '/^\S+$/',  
+                        'pattern' => '/^\S+$/',
                         'message' => 'Пароль не должен содержать пробелы.',
                     ]),
                     new Regex([
@@ -62,7 +57,6 @@ class RegistrationType extends AbstractType
                         'message' => 'Пароль должен содержать хотя бы один спецсимвол.',
                     ]),
                 ],
-
             ]);
     }
 
