@@ -13,9 +13,9 @@ class UserService
         private UserPasswordHasherInterface $passwordHasher
     ) {}
 
-    public function registerUser(User $user): void
+    public function registerUser(User $user, string $plaintextPassword): void
     {
-        $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
         $user->setPassword($hashedPassword);
 
         $this->entityManager->persist($user);
