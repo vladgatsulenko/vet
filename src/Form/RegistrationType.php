@@ -18,7 +18,7 @@ class RegistrationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('email', EmailType::class, [
-            'label' => 'Emal',
+            'label' => 'Email',
             'constraints' => [
                 new NotBlank([
                     'message' => 'Поле email не должно быть пустым.',
