@@ -16,7 +16,7 @@ class EmailVerificationController extends AbstractController
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if (!$user) {
-            throw $this->createNotFoundException('Пользователь не найден.');
+            throw $this->createNotFoundException();
         }
 
         $user->setVerified(true);

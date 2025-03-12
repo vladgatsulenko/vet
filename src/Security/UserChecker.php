@@ -20,8 +20,6 @@ class UserChecker implements UserCheckerInterface
         }
     }
 
-    public function checkPostAuth(UserInterface $user): void
-    {
-        // Здесь можно добавить дополнительные проверки после аутентификации, если требуется.
+    public function checkPostAuth(UserInterface $user): void{
     }
 }
