@@ -14,7 +14,8 @@ class UserService
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
-        private MailerInterface $mailer
+        private MailerInterface $mailer,
+        private UrlGeneratorInterface $router
     ) {}
 
     public function registerUser(User $user, string $plaintextPassword): void
@@ -29,9 +30,9 @@ class UserService
 
     private function sendVerificationEmail(User $user): void
     {
-        $verificationUrl = sprintf(
-            'http://localhost:8010/verify-email/%d',
-            $user->getId()
+        $verificationUrl = $this->router->generate('app_verify_email',            
+            ['id' => $user->getId()],        
+            UrlGeneratorInterface::ABSOLUTE_URL 
         );
 
         $email = (new Email())
