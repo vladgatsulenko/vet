@@ -29,6 +29,8 @@ class EmailVerificationController extends AbstractController
         }
 
         $user->setVerified(true);
+        $user->setVerificationToken(null);
+        $user->setVerificationTokenExpiresAt(null);
         $entityManager->flush();
 
         $this->addFlash('success', 'Email успешно подтверждён!');
