@@ -19,7 +19,7 @@ class EmailVerificationController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        if($user->getVerifactionTolen() !== $token){
+        if($user->getVerificationToken() !== $token){
             throw $this->createNotFoundException('Invalid verification token.');
         }
 
