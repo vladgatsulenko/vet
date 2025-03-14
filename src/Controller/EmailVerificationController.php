@@ -10,13 +10,22 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class EmailVerificationController extends AbstractController
 {
-    #[Route('/verify-email/{id}', name: 'app_verify_email')]
-    public function verifyEmail(int $id, EntityManagerInterface $entityManager): Response
+    #[Route('/verify-email/{id}/{token}', name: 'app_verify_email')]
+    public function verifyEmail(int $id, string $token, EntityManagerInterface $entityManager): Response
     {
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if (!$user) {
             throw $this->createNotFoundException();
+        }
+
+        if($user->getVerifactionTolen() !== $token){
+            throw $this->createNotFoundException('Invalid verification token.');
+        }
+
+        $now = new \DateTime();
+        if ($user->getVerificationTokenExpiresAt() < $now) {
+            throw $this->createNotFoundException('Verification token has expired.');
         }
 
         $user->setVerified(true);

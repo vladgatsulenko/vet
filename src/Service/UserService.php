@@ -8,6 +8,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid; 
 
 class UserService
 {
@@ -23,6 +24,12 @@ class UserService
         $hashedPassword = $this->passwordHasher->hashPassword($user, $plaintextPassword);
         $user->setPassword($hashedPassword);
 
+        $token = Uuid::v4()->toRfc4122();
+        $user->setVerificationToken($token);
+
+        $expiresAt = new \DateTime('+24 hours');
+        $user->setVerificationTokenExpiresAt($expiresAt);
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         $this->sendVerificationEmail($user);
@@ -31,7 +38,10 @@ class UserService
     private function sendVerificationEmail(User $user): void
     {
         $verificationUrl = $this->router->generate('app_verify_email',            
-            ['id' => $user->getId()],        
+            [
+             'id' => $user->getId(),
+             'token' => $user->getVerificationToken()
+            ],        
             UrlGeneratorInterface::ABSOLUTE_URL 
         );
 
