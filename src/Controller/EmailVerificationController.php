@@ -20,7 +20,7 @@ class EmailVerificationController extends AbstractController
         }
 
         if($user->getVerificationToken() !== $token){
-            throw $this->createNotFoundException('Invalid verification token.');
+            throw $this->createNotFoundException();
         }
 
         $now = new \DateTime();
