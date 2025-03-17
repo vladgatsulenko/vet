@@ -9,6 +9,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid; 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class UserService
 {
@@ -16,7 +17,8 @@ class UserService
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private MailerInterface $mailer,
-        private UrlGeneratorInterface $router
+        private UrlGeneratorInterface $router,
+        private ParameterBagInterface $params
     ) {}
 
     public function registerUser(User $user, string $plaintextPassword): void
@@ -37,6 +39,7 @@ class UserService
 
     private function sendVerificationEmail(User $user): void
     {
+        $domain = $this->params->get('app.domain');
         $verificationUrl = $this->router->generate('app_verify_email',            
             [
              'id' => $user->getId(),
@@ -46,7 +49,7 @@ class UserService
         );
 
         $email = (new Email())
-            ->from('no-reply@vetpharmacy.local')
+            ->from('no-reply@' . $domain)
             ->to($user->getEmail())
             ->subject('Подтверждение регистрации')
             ->html(sprintf(
