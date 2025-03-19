@@ -18,7 +18,8 @@ class UserService
         private UserPasswordHasherInterface $passwordHasher,
         private MailerInterface $mailer,
         private UrlGeneratorInterface $router,
-        private ParameterBagInterface $params
+        private ParameterBagInterface $params,
+        private \Twig\Environment $twig 
     ) {}
 
     public function registerUser(User $user, string $plaintextPassword): void
@@ -48,14 +49,16 @@ class UserService
             UrlGeneratorInterface::ABSOLUTE_URL 
         );
 
+        $htmlContent = $this->twig->render('emails/verification.html.twig', [
+            'user' => $user,
+            'verificationUrl' => $verificationUrl,
+        ]);
+
         $email = (new Email())
             ->from('no-reply@' . $domain)
             ->to($user->getEmail())
             ->subject('Подтверждение регистрации')
-            ->html(sprintf(
-                '<p>Спасибо за регистрацию!</p><p>Для подтверждения аккаунта, пожалуйста, нажмите на ссылку: <a href="%s">Подтвердить email</a></p>',
-                $verificationUrl
-            ));
+            ->html($htmlContent);
 
         $this->mailer->send($email);
     }
