@@ -3,6 +3,14 @@
 {% block title %}Вход!{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     <form method="post">
         {% if error %}
             <div class="alert alert-danger">{{error}}</div>
