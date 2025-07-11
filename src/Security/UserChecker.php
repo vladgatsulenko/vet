@@ -6,9 +6,15 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserChecker implements UserCheckerInterface
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+        
+    }
+
     public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof User) {
@@ -16,7 +22,7 @@ class UserChecker implements UserCheckerInterface
         }
 
         if (!$user->isVerified()) {
-            throw new CustomUserMessageAccountStatusException('Пожалуйста, подтвердите ваш email перед входом.');
+            throw new CustomUserMessageAccountStatusException($this->translator->trans('loginNotVerified'));
         }
     }
 
