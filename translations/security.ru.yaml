@@ -1,2 +1,4 @@
 'Invalid credentials.': 'Неверные данные'
 'loginNotVerified': 'Пожалуйста, подтвердите ваш email перед входом.'
+'flashRegistrationEmailSent': 'Для завершения регистрации подтвердите ваш Email. Проверьте вашу почту для подтверждения.'
+'emailSuccess': 'Email успешно подтверждён!'
