@@ -32,7 +32,7 @@ class RegistrationController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('flashRegistrationEmailSent', [], 'security')
+                $this->translator->trans('flashRegistrationEmailSent')
             );
 
             return $this->redirectToRoute('app_register');

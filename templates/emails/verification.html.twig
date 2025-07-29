@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Подтверждение регистрации</title>
+    <title>{{'emailVerificationPageTitle'|trans}}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
-        <h1>Спасибо за регистрацию!</h1>
+        <h1>{{'emailVerificationHeading'|trans}}</h1>
         <p>Чтобы подтвердить ваш аккаунт, пожалуйста, нажмите на кнопку ниже:</p>
         <a class="btn btn-primary" href="{{ verificationUrl }}">Подтвердить email</a>
     </div>

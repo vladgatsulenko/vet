@@ -41,7 +41,7 @@ class EmailVerificationController extends AbstractController
 
         $this->addFlash(
                 'success',
-                $this->translator->trans('emailSuccess', [], 'security')
+                $this->translator->trans('emailSuccess')
             );
 
         return $this->redirectToRoute('app_login');
