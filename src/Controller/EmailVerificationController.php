@@ -39,10 +39,7 @@ class EmailVerificationController extends AbstractController
         $user->setVerificationTokenExpiresAt(null);
         $entityManager->flush();
 
-        $this->addFlash(
-                'success',
-                $this->translator->trans('emailSuccess')
-            );
+        $this->addFlash('success', $this->translator->trans('emailSuccess'));
 
         return $this->redirectToRoute('app_login');
     }

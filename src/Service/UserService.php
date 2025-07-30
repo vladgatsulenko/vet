@@ -6,7 +6,6 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid; 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -21,7 +20,6 @@ class UserService
         private MailerInterface $mailer,
         private UrlGeneratorInterface $router,
         private ParameterBagInterface $params,
-        private \Twig\Environment $twig, 
         private TranslatorInterface $translator
     ) {}
 

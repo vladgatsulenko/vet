@@ -16,7 +16,7 @@
 
   {% if app.user %}
     <div class="alert alert-info mb-3">
-      {{'Welcome'|trans}} {{ app.user.userIdentifier }}! 
+      {{'Welcome'|trans}}, {{ app.user.userIdentifier }}! 
       <a href="{{ path('app_logout') }}">{{'logOut'|trans}}</a>
     </div>
   {% endif %}
