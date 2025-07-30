@@ -6,20 +6,21 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid; 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Contracts\Translation\TranslatorInterface;
 class UserService
 {
+    
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
         private MailerInterface $mailer,
         private UrlGeneratorInterface $router,
         private ParameterBagInterface $params,
-        private \Twig\Environment $twig 
+        private TranslatorInterface $translator
     ) {}
 
     public function registerUser(User $user, string $plaintextPassword): void
@@ -49,16 +50,15 @@ class UserService
             UrlGeneratorInterface::ABSOLUTE_URL 
         );
 
-        $htmlContent = $this->twig->render('emails/verification.html.twig', [
-            'user' => $user,
-            'verificationUrl' => $verificationUrl,
-        ]);
-
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from('no-reply@' . $domain)
             ->to($user->getEmail())
-            ->subject('Подтверждение регистрации')
-            ->html($htmlContent);
+            ->subject($this->translator->trans('emailVerificationPageTitle'))
+            ->htmlTemplate('emails/verification.html.twig')
+            ->context([
+                'user' => $user,
+                'verificationUrl' => $verificationUrl 
+            ]);
 
         $this->mailer->send($email);
     }

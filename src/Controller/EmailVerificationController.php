@@ -7,9 +7,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EmailVerificationController extends AbstractController
 {
+    public function __construct(private TranslatorInterface $translator)
+    {
+        
+    }
+
     #[Route('/verify-email/{id}/{token}', name: 'app_verify_email')]
     public function verifyEmail(int $id, string $token, EntityManagerInterface $entityManager): Response
     {
@@ -33,7 +39,7 @@ class EmailVerificationController extends AbstractController
         $user->setVerificationTokenExpiresAt(null);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Email успешно подтверждён!');
+        $this->addFlash('success', $this->translator->trans('emailSuccess'));
 
         return $this->redirectToRoute('app_login');
     }

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Вход{% endblock %}
+{% block title %}{{'loginPageTittle'|trans}}{% endblock %}
 
 {% block body %}
   {% for label, messages in app.flashes %}
@@ -10,20 +10,20 @@
   {% endfor %}
 
   {% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    <div>{{ error.messageKey|trans}}</div>
   {% endif %}
 
 
   {% if app.user %}
     <div class="alert alert-info mb-3">
-      Добро пожаловать, {{ app.user.userIdentifier }}! 
-      <a href="{{ path('app_logout') }}">Выйти</a>
+      {{'Welcome'|trans}}, {{ app.user.userIdentifier }}! 
+      <a href="{{ path('app_logout') }}">{{'logOut'|trans}}</a>
     </div>
   {% endif %}
 
   <div class="card mx-auto mt-4" style="max-width: 420px;">
     <div class="card-body">
-      <h1 class="h3 mb-3 text-center">Пожалуйста, войдите</h1>
+      <h1 class="h3 mb-3 text-center">{{'pleaseLogIn'|trans}}</h1>
       <form method="post">
         <div class="mb-3">
           <label for="username" class="form-label">Email</label>
@@ -37,7 +37,7 @@
                  autofocus>
         </div>
         <div class="mb-3">
-          <label for="password" class="form-label">Пароль</label>
+          <label for="password" class="form-label">{{'loginPagePassword'|trans}}</label>
           <input type="password"
                  id="password"
                  name="_password"
@@ -47,7 +47,7 @@
         </div>
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-        <button type="submit" class="btn btn-primary w-100 mb-2">Войти</button>
+        <button type="submit" class="btn btn-primary w-100 mb-2">{{'loginButton'|trans}}</button>
       </form>
     </div>
   </div>
