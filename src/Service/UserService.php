@@ -7,13 +7,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Uid\Uuid; 
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 class UserService
 {
-    
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
@@ -21,7 +21,8 @@ class UserService
         private UrlGeneratorInterface $router,
         private ParameterBagInterface $params,
         private TranslatorInterface $translator
-    ) {}
+    ) {
+    }
 
     public function registerUser(User $user, string $plaintextPassword): void
     {
@@ -42,12 +43,13 @@ class UserService
     private function sendVerificationEmail(User $user): void
     {
         $domain = $this->params->get('app.domain');
-        $verificationUrl = $this->router->generate('app_verify_email',            
+        $verificationUrl = $this->router->generate(
+            'app_verify_email',
             [
              'id' => $user->getId(),
              'token' => $user->getVerificationToken()
-            ],        
-            UrlGeneratorInterface::ABSOLUTE_URL 
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
         );
 
         $email = (new TemplatedEmail())
@@ -57,7 +59,7 @@ class UserService
             ->htmlTemplate('emails/verification.html.twig')
             ->context([
                 'user' => $user,
-                'verificationUrl' => $verificationUrl 
+                'verificationUrl' => $verificationUrl
             ]);
 
         $this->mailer->send($email);

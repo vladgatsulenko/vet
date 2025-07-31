@@ -32,6 +32,7 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "squizlabs/php_codesniffer": "^3.13",
         "symfony/maker-bundle": "^1.62.1"
     },
     "config": {

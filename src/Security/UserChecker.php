@@ -12,7 +12,6 @@ class UserChecker implements UserCheckerInterface
 {
     public function __construct(private TranslatorInterface $translator)
     {
-        
     }
 
     public function checkPreAuth(UserInterface $user): void
@@ -26,6 +25,7 @@ class UserChecker implements UserCheckerInterface
         }
     }
 
-    public function checkPostAuth(UserInterface $user): void{
+    public function checkPostAuth(UserInterface $user): void
+    {
     }
 }
