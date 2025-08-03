@@ -13,10 +13,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-
     public function __construct(private TranslatorInterface $translator)
     {
-        
     }
 
     #[Route('/register', name: 'app_register')]

@@ -13,7 +13,6 @@ class EmailVerificationController extends AbstractController
 {
     public function __construct(private TranslatorInterface $translator)
     {
-        
     }
 
     #[Route('/verify-email/{id}/{token}', name: 'app_verify_email')]
@@ -25,7 +24,7 @@ class EmailVerificationController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        if($user->getVerificationToken() !== $token){
+        if ($user->getVerificationToken() !== $token) {
             throw $this->createNotFoundException();
         }
 
