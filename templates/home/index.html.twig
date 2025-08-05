@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{'homePageTittle'|trans}}{% endblock %}
+
+{% block body %}
+  <div class="container mt-5">
+    <h1>{{'homePageHeader'|trans}}</h1>
+
+    <nav class="my-4">
+      {% if app.user %}
+        <a href="{{ path('app_logout') }}" class="btn btn-outline-secondary me-2">{{'homePageLogout'|trans}}</a>
+      {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn-primary me-2">{{'homePageLogin'|trans}}</a>
+        <a href="{{ path('app_register') }}" class="btn btn-success">{{'homePageRegist'|trans}}</a>
+      {% endif %}
+    </nav>
+
+    {% if app.user %}
+      <p>{{'homePageHello'|trans}}, {{ app.user.userIdentifier }}!</p>
+    {% else %}
+      <p>{{'homePageInstruction'|trans}}.</p>
+    {% endif %}
+  </div>
+{% endblock %}
