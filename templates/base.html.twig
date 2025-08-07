@@ -12,6 +12,9 @@
         {% endblock %}
     </head>
     <body>
+        <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}">English</a> |
+        <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}">Русский</a>
+
         {% block body %}{% endblock %}
     </body>
 </html>
