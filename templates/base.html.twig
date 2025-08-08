@@ -12,6 +12,20 @@
         {% endblock %}
     </head>
     <body>
+       <header class="text-end p-3">
+            <div class="btn-group" role="group" aria-label="Language switch">
+                <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}"
+                    class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">
+                     English
+                </a>
+                <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}"
+                 class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">
+                    Русский
+                </a>
+            </div>
+        </header>
+
+
         {% block body %}{% endblock %}
     </body>
 </html>
