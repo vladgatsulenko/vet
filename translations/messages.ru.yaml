@@ -25,3 +25,5 @@
 'homePageRegist': 'Зарегистрироваться'
 'homePageInstruction': 'Пожалуйста, зарегистрируйтесь или войдите'
 'homePageHello': 'Привет'
+'adminPagetitle': 'Панель админа'
+'adminPageTableName': 'Список пользователей'
