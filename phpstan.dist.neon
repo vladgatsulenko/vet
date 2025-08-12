@@ -1,21 +1,18 @@
+parameters:
+  level: 8
+  tmpDir: var/cache/phpstan
+  paths:
+    - bin/
+    - config/
+    - public/
+    - src/
+  
+  symfony:
+    containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+
+  doctrine:
+    ormRepositoryClass: Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+
 includes:
   - vendor/phpstan/phpstan-symfony/extension.neon
   - vendor/phpstan/phpstan-doctrine/extension.neon
-
-parameters:
-  level: 5
-  paths:
-    - src
-    - tests
-
-  excludePaths:
-    - vendor
-    - var
-    - public
-    - migrations
-
-  bootstrapFiles:
-    - vendor/autoload.php
-
-  symfony:
-    containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
