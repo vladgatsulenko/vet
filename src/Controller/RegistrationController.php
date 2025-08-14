@@ -30,7 +30,11 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $userService->registerUser($user, $user->getPassword());
+
+            /** @var non-empty-string $plaintextPassword */
+            $plaintextPassword = $user->getPassword();
+
+            $userService->registerUser($user, $plaintextPassword);
 
             $this->addFlash('success', $this->translator->trans('flashRegistrationEmailSent'));
 
