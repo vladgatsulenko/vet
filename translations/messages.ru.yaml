@@ -27,3 +27,6 @@
 'homePageHello': 'Привет'
 'adminPagetitle': 'Панель админа'
 'adminPageTableName': 'Список пользователей'
+'adminPageCollumId': 'Номер'
+'adminPageCollumEmail': 'Почта'
+'adminPageError': 'Пользователи не найдены'

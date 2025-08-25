@@ -13,8 +13,8 @@ class AdminController extends AbstractController
     #[Route('/admin/dashboard', name: 'admin_dashboard', methods: ['GET'])]
     public function dashboard(Request $request, UserRepository $userRepository): Response
     {
-        $page = max(1, (int) $request->query->get('page', 1));
-        $limit = max(1, (int) $request->query->get('limit', 10));
+        $page = max(1, (int) $request->query->getInt('page', 1));
+        $limit = max(1, (int) $request->query->getInt('limit', 10));
 
         $total = $userRepository->countAllUsers();
 
