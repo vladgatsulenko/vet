@@ -2,26 +2,26 @@
 
 namespace App\Controller;
 
+use App\Dto\AdminUsersQuery;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
 class AdminController extends AbstractController
 {
     #[Route('/admin/dashboard', name: 'admin_dashboard', methods: ['GET'])]
-    public function dashboard(Request $request, UserRepository $userRepository): Response
-    {
-        $page = max(1, (int) $request->query->getInt('page', 1));
-        $limit = max(1, (int) $request->query->getInt('limit', 10));
+    public function dashboard(
+        UserRepository $userRepository,
+        #[MapQueryString] AdminUsersQuery $q
+    ): Response {
+    
+        $page = max(1, $q->page);
+        $limit = min(100, max(1, $q->limit));
 
         $total = $userRepository->countAllUsers();
-
-        $totalPages = (int) ceil($total / $limit);
-        if ($totalPages < 1) {
-            $totalPages = 1;
-        }
+        $totalPages = max(1, (int) ceil($total / $limit));
 
         if ($page > $totalPages) {
             $page = $totalPages;
