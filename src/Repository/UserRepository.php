@@ -34,10 +34,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Return users for given page.
-     *
-     * @param int $page  1-based page number
-     * @param int $limit items per page
      *
      * @return User[] Returns an array of User objects
      */
@@ -54,11 +50,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * Count total users.
-     *
-     * @return int
-     */
     public function countAllUsers(): int
     {
         $qb = $this->createQueryBuilder('u')
