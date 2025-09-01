@@ -9,8 +9,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AdminController extends AbstractController
 {
@@ -18,23 +16,13 @@ class AdminController extends AbstractController
     public function dashboard(
         UserRepository $userRepository,
         Paginator $paginator,
-        ValidatorInterface $validator,
-        #[MapQueryString] AdminUsersQuery $q
+        #[MapQueryString] AdminUsersQuery $query
     ): Response {
-        $errors = $validator->validate($q);
-        if (count($errors) > 0) {
-            $message = (string) $errors;
-            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, $message);
-        }
-
-        $page = max(1, $q->page);
-        $limit = min(100, max(1, $q->limit));
-
         $total = $userRepository->countAllUsers();
 
-        $pagination = $paginator->paginate($total, $page, $limit, ['max_visible' => 7]);
+        $pagination = $paginator->paginate($total, $query->page, $query->limit);
 
-        $users = $userRepository->findUsersPaginated($pagination['currentPage'], $pagination['limit']);
+        $users = $userRepository->findPaginated($pagination->offset, $pagination->limit);
 
         return $this->render('admin/dashboard.html.twig', [
             'users' => $users,

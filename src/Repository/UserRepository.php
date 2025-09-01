@@ -37,15 +37,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      *
      * @return User[] Returns an array of User objects
      */
-    public function findUsersPaginated(int $page, int $limit): array
+    public function findPaginated(?int $offset = null, ?int $limit = null): array
     {
-        $page = max(1, $page);
-        $limit = max(1, $limit);
-
         $qb = $this->createQueryBuilder('u')
-            ->orderBy('u.id', 'ASC')
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit);
+            ->orderBy('u.id', 'ASC');
+
+        if ($offset !== null) {
+            $qb->setFirstResult($offset);
+        }
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
 
         return $qb->getQuery()->getResult();
     }

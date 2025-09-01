@@ -2,36 +2,27 @@
 
 namespace App\Service;
 
+use App\Dto\Pagination;
+
 final class Paginator
 {
-    /**
-     * Paginate data and return metadata array.
-     *
-     * @param int $total    Total items count
-     * @param int $page     Current page (1-based)
-     * @param int $limit    Items per page
-     * @param array{max_visible?: int} $opts
-     *
-     * @return array{
-     *   currentPage: int,
-     *   limit: int,
-     *   total: int,
-     *   totalPages: int,
-     *   offset: int,
-     *   firstItemIndex: int,
-     *   lastItemIndex: int,
-     *   hasPrevious: bool,
-     *   hasNext: bool,
-     *   previousPage: int|null,
-     *   nextPage: int|null,
-     *   pages: list<int>
-     * }
-     */
-    public function paginate(int $total, int $page, int $limit, array $opts = []): array
-    {
-        $maxVisible = $opts['max_visible'] ?? 7;
+    public const DEFAULT_MAX_VISIBLE = 7;
+    public const MAX_LIMIT = 100;
 
-        $limit = max(1, $limit);
+    /**
+     * Create pagination metadata as a Pagination object.
+     *
+     * @param int $total
+     * @param int $page 1-based
+     * @param int $limit
+     * @param int $maxVisible
+     *
+     * @return Pagination
+     */
+    public function paginate(int $total, int $page, int $limit, int $maxVisible = self::DEFAULT_MAX_VISIBLE): Pagination
+    {
+        $maxVisible = max(1, $maxVisible);
+        $limit = min(self::MAX_LIMIT, max(1, $limit));
         $page  = max(1, $page);
 
         $totalPages = (int) max(1, ceil($total / $limit));
@@ -71,19 +62,19 @@ final class Paginator
         $firstItemIndex = $total === 0 ? 0 : $offset + 1;
         $lastItemIndex = min($total, $offset + $limit);
 
-        return [
-            'currentPage' => $page,
-            'limit' => $limit,
-            'total' => $total,
-            'totalPages' => $totalPages,
-            'offset' => $offset,
-            'firstItemIndex' => $firstItemIndex,
-            'lastItemIndex' => $lastItemIndex,
-            'hasPrevious' => $page > 1,
-            'hasNext' => $page < $totalPages,
-            'previousPage' => $page > 1 ? $page - 1 : null,
-            'nextPage' => $page < $totalPages ? $page + 1 : null,
-            'pages' => $pages,
-        ];
+        return new Pagination(
+            $page,
+            $limit,
+            $total,
+            $totalPages,
+            $offset,
+            $firstItemIndex,
+            $lastItemIndex,
+            $page > 1,
+            $page < $totalPages,
+            $page > 1 ? $page - 1 : null,
+            $page < $totalPages ? $page + 1 : null,
+            $pages
+        );
     }
 }
