@@ -9,16 +9,6 @@ final class Paginator
     public const DEFAULT_MAX_VISIBLE = 7;
     public const MAX_LIMIT = 100;
 
-    /**
-     * Create pagination metadata as a Pagination object.
-     *
-     * @param int $total
-     * @param int $page 1-based
-     * @param int $limit
-     * @param int $maxVisible
-     *
-     * @return Pagination
-     */
     public function paginate(int $total, int $page, int $limit, int $maxVisible = self::DEFAULT_MAX_VISIBLE): Pagination
     {
         $maxVisible = max(1, $maxVisible);
