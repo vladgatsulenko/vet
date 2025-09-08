@@ -63,7 +63,6 @@ services:
 
     command: >
       php /var/www/html/bin/console messenger:consume async
-      --time-limit=0
       --memory-limit=512M
       --sleep=10
       -vv
