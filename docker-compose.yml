@@ -51,36 +51,30 @@ services:
       - '1080:1080'
       - '1025:1025'
 
-  worker:
-    container_name: vet_worker
+  php_supervisor:
+    container_name: vet_php_supervisor
     build:
       context: ./.docker/php
-
-    depends_on:
-      - database
-      - mailer
-      - php
-
-    command: >
-      php /var/www/html/bin/console messenger:consume async
-      --memory-limit=512M
-      --sleep=10
-      -vv
-
+      target: php_supervisor
+    command: ["supervisord", "-c", "/etc/supervisor/supervisord.conf", "-n"]
     volumes:
       - .:/var/www/html:cached
       - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
       - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
-
+      - ./.docker/php/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
+      - ./.docker/php/supervisor/:/etc/supervisor/conf.d/:ro
+    depends_on:
+      - database
+      - mailer
+      - php
     env_file:
       - ./.env
       - ./.env.local
-
     restart: unless-stopped
-
     logging:
       options:
         max-size: "10m"
         max-file: "3"
+
 
