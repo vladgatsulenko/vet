@@ -23,5 +23,3 @@ RUN apt-get update \
 
 
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor
-
-CMD ["php-fpm"]

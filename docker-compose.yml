@@ -67,7 +67,6 @@ services:
     depends_on:
       - database
       - mailer
-      - php
     env_file:
       - ./.env
       - ./.env.local
