@@ -51,3 +51,29 @@ services:
       - '1080:1080'
       - '1025:1025'
 
+  php_supervisor:
+    container_name: vet_php_supervisor
+    build:
+      context: ./.docker/php
+      target: php_supervisor
+    command: ["supervisord", "-c", "/etc/supervisor/supervisord.conf", "-n"]
+    volumes:
+      - .:/var/www/html:cached
+      - ./.docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./.docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./.docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+      - ./.docker/php/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
+      - ./.docker/php/supervisor/conf.d:/etc/supervisor/conf.d:ro
+    depends_on:
+      - database
+      - mailer
+    env_file:
+      - ./.env
+      - ./.env.local
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+

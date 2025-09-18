@@ -1,17 +1,25 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm AS php
 
 WORKDIR /var/www/html
 
-RUN apt update \
-    && apt install -y zlib1g-dev g++ git libicu-dev zip libzip-dev zip nano libxml2-dev \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends zlib1g-dev g++ git libicu-dev zip libzip-dev nano libxml2-dev ca-certificates wget \
     && docker-php-ext-install intl opcache pdo pdo_mysql dom xml \
     && pecl install apcu xdebug \
     && docker-php-ext-enable apcu xdebug \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip
+    && docker-php-ext-install zip \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN curl -sS https://get.symfony.com/cli/installer | bash
+RUN curl -sS https://get.symfony.com/cli/installer | bash -s -- --install-dir=/usr/local/bin
+
+FROM php AS php_supervisor
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends supervisor \
+    && docker-php-ext-install pcntl \
+    && rm -rf /var/lib/apt/lists/*
 
 
-#RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
+RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor
