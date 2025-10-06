@@ -16,7 +16,7 @@ class ProductManual
     #[ORM\JoinColumn(name: "product_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
     private Product $product;
 
-    #[ORM\Column(type: "text", columnDefinition: "MEDIUMTEXT", nullable: true)]
+    #[ORM\Column(type: "text", options: ["collation" => "utf8mb4_unicode_ci"], nullable: true)]
     private ?string $text = null;
 
     public function getId(): ?int
