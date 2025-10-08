@@ -1,9 +1,10 @@
 <?php
 namespace App\Entity;
 
+use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ORM\Table(name: "product")]
 class Product
 {
