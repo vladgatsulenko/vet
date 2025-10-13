@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repository;
 
 use App\Entity\Product;
@@ -38,7 +39,7 @@ class ProductRepository extends ServiceEntityRepository
         }
         if ($q) {
             $qb->andWhere('p.name LIKE :q OR p.descriptionShort LIKE :q')
-               ->setParameter('q', '%'.$q.'%');
+               ->setParameter('q', '%' . $q . '%');
         }
 
         return $qb->orderBy('p.name', 'ASC')->getQuery()->getResult();
