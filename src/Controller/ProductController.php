@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\ProductManualRepository;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
@@ -46,10 +47,13 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
+    public function show(Product $product, ProductManualRepository $manualRepository): Response
     {
+        $manual = $manualRepository->findOneBy(['product' => $product]);
+
         return $this->render('product/show.html.twig', [
-            'product' => $product,
+        'product' => $product,
+        'manual'  => $manual,
         ]);
     }
 
