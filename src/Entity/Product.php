@@ -4,9 +4,9 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ORM\Table(name: "product")]
 class Product
 {
     #[ORM\Id]
@@ -14,7 +14,7 @@ class Product
     #[ORM\Column(type: "integer")]
     private ?int $id = null;
 
-    #[ORM\Column(type: "string", length: 255)]
+    #[ORM\Column(length: 255)]
     private string $name;
 
     #[ORM\ManyToOne(targetEntity: PharmacologicalGroup::class)]
@@ -25,28 +25,28 @@ class Product
     #[ORM\JoinColumn(name: "animal_species_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
     private ?AnimalSpecies $animalSpecies = null;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $descriptionShort = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $descriptionMedium = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $descriptionFull = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $ingredients = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $pharmacologicalProperties = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $indicationsForUse = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $dosageAndAdministration = null;
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $restrictions = null;
 
     public function getId(): ?int
@@ -62,6 +62,7 @@ class Product
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -73,6 +74,7 @@ class Product
     public function setPharmacologicalGroup(PharmacologicalGroup $group): self
     {
         $this->pharmacologicalGroup = $group;
+
         return $this;
     }
 
@@ -84,6 +86,7 @@ class Product
     public function setAnimalSpecies(?AnimalSpecies $species): self
     {
         $this->animalSpecies = $species;
+
         return $this;
     }
 
@@ -95,6 +98,7 @@ class Product
     public function setDescriptionShort(?string $descriptionShort): self
     {
         $this->descriptionShort = $descriptionShort;
+
         return $this;
     }
 
@@ -106,6 +110,7 @@ class Product
     public function setDescriptionMedium(?string $descriptionMedium): self
     {
         $this->descriptionMedium = $descriptionMedium;
+
         return $this;
     }
 
@@ -117,6 +122,7 @@ class Product
     public function setDescriptionFull(?string $descriptionFull): self
     {
         $this->descriptionFull = $descriptionFull;
+
         return $this;
     }
 
@@ -128,6 +134,7 @@ class Product
     public function setIngredients(?string $ingredients): self
     {
         $this->ingredients = $ingredients;
+
         return $this;
     }
 
@@ -136,9 +143,10 @@ class Product
         return $this->pharmacologicalProperties;
     }
 
-    public function setPharmacologicalProperties(?string $val): self
+    public function setPharmacologicalProperties(?string $pharmacologicalProperties): self
     {
-        $this->pharmacologicalProperties = $val;
+        $this->pharmacologicalProperties = $pharmacologicalProperties;
+    
         return $this;
     }
 
@@ -147,9 +155,10 @@ class Product
         return $this->indicationsForUse;
     }
 
-    public function setIndicationsForUse(?string $val): self
+    public function setIndicationsForUse(?string $indicationsForUse): self
     {
-        $this->indicationsForUse = $val;
+        $this->indicationsForUse = $indicationsForUse;
+
         return $this;
     }
 
@@ -158,9 +167,10 @@ class Product
         return $this->dosageAndAdministration;
     }
 
-    public function setDosageAndAdministration(?string $val): self
+    public function setDosageAndAdministration(?string $dosageAndAdministration): self
     {
-        $this->dosageAndAdministration = $val;
+        $this->dosageAndAdministration = $dosageAndAdministration;
+
         return $this;
     }
 
@@ -169,9 +179,10 @@ class Product
         return $this->restrictions;
     }
 
-    public function setRestrictions(?string $val): self
+    public function setRestrictions(?string $restrictions): self
     {
-        $this->restrictions = $val;
+        $this->restrictions = $restrictions;
+        
         return $this;
     }
 }
