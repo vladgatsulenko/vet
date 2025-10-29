@@ -3,21 +3,21 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity]
-#[ORM\Table(name: "product_manual")]
 class ProductManual
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
-    #[ORM\JoinColumn(name: "product_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private Product $product;
 
-    #[ORM\Column(type: "text", options: ["collation" => "utf8mb4_unicode_ci"], nullable: true)]
+    #[ORM\Column(type: Types::TEXT, options: ["collation" => "utf8mb4_unicode_ci"], nullable: true)]
     private ?string $text = null;
 
     public function getId(): ?int
@@ -33,6 +33,7 @@ class ProductManual
     public function setProduct(Product $product): self
     {
         $this->product = $product;
+
         return $this;
     }
 
@@ -44,6 +45,7 @@ class ProductManual
     public function setText(?string $text): self
     {
         $this->text = $text;
+
         return $this;
     }
 }

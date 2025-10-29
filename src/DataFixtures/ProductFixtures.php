@@ -33,10 +33,12 @@ class ProductFixtures extends Fixture
         $manager->persist($cat);
 
         for ($i = 0; $i < 6; $i++) {
-            $p = new Product();
-            $p->setName($faker->word . ' ' . ($i + 1));
-            $p->setPharmacologicalGroup(($i % 2 === 0) ? $group1 : $group2);
-            $p->setAnimalSpecies(($i % 2 === 0) ? $dog : $cat);
+            $name = $faker->word . ' ' . ($i + 1);
+            $group = ($i % 2 === 0) ? $group1 : $group2;
+            $species = ($i % 2 === 0) ? $dog : $cat;
+
+            $p = new Product($name, $group, $species);
+
             $p->setDescriptionShort($faker->sentence(3));
             $p->setDescriptionMedium($faker->text(200));
             $p->setDescriptionFull($faker->paragraph(4));
