@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ProductManual;
+use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,13 +17,13 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductManualRepository extends ServiceEntityRepository
 {
-    public function findOneByProduct(\App\Entity\Product $product): ?\App\Entity\ProductManual
-    {
-        return $this->findOneBy(['product' => $product]);
-    }
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ProductManual::class);
+    }
+
+    public function findOneByProduct(Product $product): ?ProductManual
+    {
+        return $this->findOneBy(['product' => $product]);
     }
 }
