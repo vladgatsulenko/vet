@@ -22,13 +22,13 @@
   <div>{{ product.ingredients|raw }}</div>
 {% endif %}
 
-{% if manual is defined and manual %} {#костыль#} 
+{% if manual is defined and manual and manual.text is not empty %}
   <h3>Инструкция</h3>
   <div class="product-manual">{{ manual.text|raw }}</div>
 {% endif %}
 
 <p>
-  <a href="{{ path('app_product_index') }}">Назад к списку</a> {#костыль#}
-  <a href="{{ path('app_product_edit', {'id': product.id}) }}">Редактировать</a> {#костыль#}
+  <a href="{{ path('app_product_index') }}">Назад к списку</a>
+  <a href="{{ path('app_product_edit', {'id': product.id}) }}">Редактировать</a>
 </p>
 {% endblock %}

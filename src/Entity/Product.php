@@ -49,6 +49,13 @@ class Product
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $restrictions = null;
 
+    public function __construct(string $name, PharmacologicalGroup $pharmacologicalGroup, ?AnimalSpecies $animalSpecies = null)
+    {
+        $this->name = $name;
+        $this->pharmacologicalGroup = $pharmacologicalGroup;
+        $this->animalSpecies = $animalSpecies;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -146,7 +153,7 @@ class Product
     public function setPharmacologicalProperties(?string $pharmacologicalProperties): self
     {
         $this->pharmacologicalProperties = $pharmacologicalProperties;
-    
+
         return $this;
     }
 
@@ -182,7 +189,7 @@ class Product
     public function setRestrictions(?string $restrictions): self
     {
         $this->restrictions = $restrictions;
-        
+
         return $this;
     }
 }

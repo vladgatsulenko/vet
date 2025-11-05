@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\ProductManualRepository;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
@@ -28,11 +29,12 @@ final class ProductController extends AbstractController
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $product = new Product();
-        $form = $this->createForm(ProductType::class, $product);
+        $form = $this->createForm(ProductType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Product $product */
+            $product = $form->getData();
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -40,16 +42,18 @@ final class ProductController extends AbstractController
         }
 
         return $this->render('product/new.html.twig', [
-            'product' => $product,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
+    public function show(Product $product, ProductManualRepository $manualRepository): Response
     {
+        $manual = $manualRepository->findOneByProduct($product);
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
+            'manual'  => $manual,
         ]);
     }
 
@@ -67,7 +71,7 @@ final class ProductController extends AbstractController
 
         return $this->render('product/edit.html.twig', [
             'product' => $product,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

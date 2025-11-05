@@ -8,6 +8,7 @@ use App\Entity\Product;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProductType extends AbstractType
@@ -26,13 +27,22 @@ class ProductType extends AbstractType
             ->add('restrictions')
             ->add('pharmacologicalGroup', EntityType::class, [
                 'class' => PharmacologicalGroup::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
             ->add('animalSpecies', EntityType::class, [
                 'class' => AnimalSpecies::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
+                'required' => false,
             ])
         ;
+
+        $builder->setEmptyData(function (FormInterface $form) {
+            return new Product(
+                $form->get('name')->getData(),
+                $form->get('pharmacologicalGroup')->getData(),
+                $form->get('animalSpecies')->getData()
+            );
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
