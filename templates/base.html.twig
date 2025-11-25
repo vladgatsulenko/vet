@@ -1,31 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale ?: 'ru' }}">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Welcome!{% endblock %}</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+
+        {% block stylesheets %}{% endblock %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body>
-       <header class="text-end p-3">
-            <div class="btn-group" role="group" aria-label="Language switch">
-                <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}"
-                    class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">
-                     English
-                </a>
-                <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}"
-                 class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">
-                    Русский
-                </a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="container">
+            <a class="navbar-brand" href="{{ path('app_main') }}">Vet</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link {% if app.request.attributes.get('_route') == 'app_main' %}active{% endif %}" href="{{ path('app_main') }}">Главная</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if app.request.attributes.get('_route') == 'app_about' %}active{% endif %}" href="{{ path('app_about') }}">О проекте</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}" href="{{ path('app_contact') }}">Контакты</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_product' %}active{% endif %}" href="{{ path('app_product_index') }}">Каталог</a>
+                </li>
+              </ul>
+
+              <div class="d-flex align-items-center">
+                <div class="btn-group me-3" role="group" aria-label="Language switch">
+                    <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}"
+                        class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">
+                         English
+                    </a>
+                    <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}"
+                     class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">
+                        Русский
+                    </a>
+                </div>
+                <a class="btn btn-outline-secondary" href="#">Вход</a>
+              </div>
             </div>
-        </header>
+          </div>
+        </nav>
 
+        <main class="container py-4">
+            {% block body %}{% endblock %}
+        </main>
 
-        {% block body %}{% endblock %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+
+        {% block extra_scripts %}{% endblock %}
     </body>
 </html>
+
