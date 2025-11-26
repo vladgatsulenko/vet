@@ -5,47 +5,61 @@
 {% block body %}
     <h1>Product index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>DescriptionShort</th>
-                <th>DescriptionMedium</th>
-                <th>DescriptionFull</th>
-                <th>Ingredients</th>
-                <th>PharmacologicalProperties</th>
-                <th>IndicationsForUse</th>
-                <th>DosageAndAdministration</th>
-                <th>Restrictions</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.descriptionShort }}</td>
-                <td>{{ product.descriptionMedium }}</td>
-                <td>{{ product.descriptionFull }}</td>
-                <td>{{ product.ingredients }}</td>
-                <td>{{ product.pharmacologicalProperties }}</td>
-                <td>{{ product.indicationsForUse }}</td>
-                <td>{{ product.dosageAndAdministration }}</td>
-                <td>{{ product.restrictions }}</td>
-                <td>
-                    <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
-                    <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
-                </td>
-            </tr>
+    {% if search is defined and search %}
+      <div class="mb-3">
+        <h5 class="mb-1">Результаты поиска для «{{ search|e }}»</h5>
+        <p class="text-muted small">Найдено: {{ products|length }}</p>
+      </div>
+    {% endif %}
+
+    {% if products is empty %}
+      <div class="alert alert-warning" role="alert">
+        {% if search is defined and search %}
+          По запросу «{{ search|e }}» ничего не найдено.
         {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+          Товары отсутствуют.
+        {% endif %}
+      </div>
+    {% else %}
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>DescriptionShort</th>
+                  <th>DescriptionMedium</th>
+                  <th>DescriptionFull</th>
+                  <th>Ingredients</th>
+                  <th>PharmacologicalProperties</th>
+                  <th>IndicationsForUse</th>
+                  <th>DosageAndAdministration</th>
+                  <th>Restrictions</th>
+                  <th>actions</th>
+              </tr>
+          </thead>
+          <tbody>
+          {% for product in products %}
+              <tr>
+                  <td>{{ product.id }}</td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.descriptionShort }}</td>
+                  <td>{{ product.descriptionMedium }}</td>
+                  <td>{{ product.descriptionFull }}</td>
+                  <td>{{ product.ingredients }}</td>
+                  <td>{{ product.pharmacologicalProperties }}</td>
+                  <td>{{ product.indicationsForUse }}</td>
+                  <td>{{ product.dosageAndAdministration }}</td>
+                  <td>{{ product.restrictions }}</td>
+                  <td>
+                      <a href="{{ path('app_product_show', {'id': product.id}) }}">show</a>
+                      <a href="{{ path('app_product_edit', {'id': product.id}) }}">edit</a>
+                  </td>
+              </tr>
+          {% endfor %}
+          </tbody>
+      </table>
+    {% endif %}
 
     <a href="{{ path('app_product_new') }}">Create new</a>
 {% endblock %}
+

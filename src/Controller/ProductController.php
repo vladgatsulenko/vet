@@ -10,19 +10,41 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\ProductManualRepository;
+use App\Repository\ProductRepository;
 
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(Request $request, ProductRepository $productRepository): Response
     {
-        $products = $entityManager
-            ->getRepository(Product::class)
-            ->findAll();
+        $raw = $request->query->get('search', $request->query->get('q', ''));
+        $search = trim((string) $raw);
+
+        if ($search === '') {
+            $search = null;
+        } else {
+            if (mb_strlen($search) > 255) {
+                $search = mb_substr($search, 0, 255);
+            }
+        }
+
+        if ($search !== null) {
+            $exact = $productRepository->findOneBy(['name' => $search]);
+            if ($exact !== null) {
+                return $this->redirectToRoute('app_product_show', ['id' => $exact->getId()]);
+            }
+        }
+
+        $products = $productRepository->findBySearch($search);
+
+        if ($search && count($products) === 1) {
+            return $this->redirectToRoute('app_product_show', ['id' => $products[0]->getId()]);
+        }
 
         return $this->render('product/index.html.twig', [
-            'products' => $products,
+        'products' => $products,
+        'search' => $search,
         ]);
     }
 

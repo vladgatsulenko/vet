@@ -16,45 +16,7 @@
         {% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <div class="container">
-            <a class="navbar-brand" href="{{ path('app_main') }}">Vet</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="mainNavbar">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                  <a class="nav-link {% if app.request.attributes.get('_route') == 'app_main' %}active{% endif %}" href="{{ path('app_main') }}">Главная</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link {% if app.request.attributes.get('_route') == 'app_about' %}active{% endif %}" href="{{ path('app_about') }}">О проекте</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link {% if app.request.attributes.get('_route') == 'app_contact' %}active{% endif %}" href="{{ path('app_contact') }}">Контакты</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link {% if app.request.attributes.get('_route') starts with 'app_product' %}active{% endif %}" href="{{ path('app_product_index') }}">Каталог</a>
-                </li>
-              </ul>
-
-              <div class="d-flex align-items-center">
-                <div class="btn-group me-3" role="group" aria-label="Language switch">
-                    <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}"
-                        class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">
-                         English
-                    </a>
-                    <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}"
-                     class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">
-                        Русский
-                    </a>
-                </div>
-                <a class="btn btn-outline-secondary" href="#">Вход</a>
-              </div>
-            </div>
-          </div>
-        </nav>
+        {% include '_navbar.html.twig' %}
 
         <main class="container py-4">
             {% block body %}{% endblock %}
@@ -65,4 +27,3 @@
         {% block extra_scripts %}{% endblock %}
     </body>
 </html>
-

@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <a class="navbar-brand" href="{{ path('app_main') }}">Vet</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% import _self as nav %}
+        {{ nav.link('app_main', 'Главная') }}
+        {{ nav.link('app_about', 'О проекте') }}
+        {{ nav.link('app_contact', 'Контакты') }}
+        {{ nav.linkStartsWith('app_product', 'Каталог') }}
+      </ul>
+
+      <form class="d-flex me-3" method="get" action="{{ path('app_product_index') }}">
+        <input class="form-control form-control-sm me-2" 
+          type="search" 
+          name="search" 
+          placeholder="Поиск" 
+          aria-label="Search" 
+          value="{{ app.request.get('search') ?: app.request.get('q') }}">
+        <button class="btn btn-sm btn-outline-primary" type="submit">Найти</button>
+      </form>
+
+      <div class="d-flex align-items-center">
+        <div class="btn-group me-2" role="group" aria-label="Language switch">
+          <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">EN</a>
+          <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">RU</a>
+        </div>
+
+        <a class="btn btn-outline-secondary btn-sm" href="#">Вход</a>
+      </div>
+    </div>
+  </div>
+
+  {% macro link(route, label) %}
+    {% set current = app.request.attributes.get('_route') == route %}
+    <li class="nav-item">
+      <a class="nav-link {{ current ? 'active' }}" href="{{ path(route) }}" {{ current ? 'aria-current="page"' : '' }}>{{ label }}</a>
+    </li>
+  {% endmacro %}
+
+  {% macro linkStartsWith(prefix, label) %}
+    {% set r = app.request.attributes.get('_route') %}
+    {% set current = r is not empty and r starts with(prefix) %}
+    <li class="nav-item">
+      <a class="nav-link {{ current ? 'active' }}" href="{{ path('app_product_index') }}" {{ current ? 'aria-current="page"' : '' }}>{{ label }}</a>
+    </li>
+  {% endmacro %}
+</nav>
