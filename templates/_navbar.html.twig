@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
   <div class="container">
-    <a class="navbar-brand" href="{{ path('app_main') }}">Vet</a>
+    <a class="navbar-brand" href="{{ path('app_home') }}">Vet</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {% import _self as nav %}
-        {{ nav.link('app_main', 'Главная') }}
+        {{ nav.link('app_home', 'Главная') }}
         {{ nav.link('app_about', 'О проекте') }}
         {{ nav.link('app_contact', 'Контакты') }}
         {{ nav.linkStartsWith('app_product', 'Каталог') }}
