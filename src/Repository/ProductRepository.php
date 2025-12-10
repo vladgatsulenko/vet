@@ -21,7 +21,7 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function findBySearch(?string $search): array
+    public function search(?string $search): array
     {
         $qb = $this->createQueryBuilder('p')
         ->leftJoin('p.pharmacologicalGroup', 'g')

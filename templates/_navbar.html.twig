@@ -14,13 +14,13 @@
         {{ nav.linkStartsWith('app_product', 'Каталог') }}
       </ul>
 
-      <form class="d-flex me-3" method="get" action="{{ path('app_product_index') }}">
-        <input class="form-control form-control-sm me-2" 
-          type="search" 
-          name="search" 
-          placeholder="Поиск" 
-          aria-label="Search" 
-          value="{{ app.request.get('search') ?: app.request.get('q') }}">
+      <form class="d-flex me-3" method="get" action="{{ path('app_product_index') }}" role="search" aria-label="Поиск по каталогу">
+        <input class="form-control form-control-sm me-2"
+               type="search"
+               name="search"
+               placeholder="Поиск"
+               aria-label="Поиск по каталогу"
+               value="{{ app.request.get('search') ?: app.request.get('query') }}">
         <button class="btn btn-sm btn-outline-primary" type="submit">Найти</button>
       </form>
 
@@ -38,7 +38,7 @@
   {% macro link(route, label) %}
     {% set current = app.request.attributes.get('_route') == route %}
     <li class="nav-item">
-      <a class="nav-link {{ current ? 'active' }}" href="{{ path(route) }}" {{ current ? 'aria-current="page"' : '' }}>{{ label }}</a>
+      <a class="nav-link {{ current ? 'active' }}" href="{{ path(route) }}" {{ current ? 'aria-current="page"' : '' }}>{{ label|e }}</a>
     </li>
   {% endmacro %}
 
@@ -46,7 +46,7 @@
     {% set r = app.request.attributes.get('_route') %}
     {% set current = r is not empty and r starts with(prefix) %}
     <li class="nav-item">
-      <a class="nav-link {{ current ? 'active' }}" href="{{ path('app_product_index') }}" {{ current ? 'aria-current="page"' : '' }}>{{ label }}</a>
+      <a class="nav-link {{ current ? 'active' }}" href="{{ path('app_product_index') }}" {{ current ? 'aria-current="page"' : '' }}>{{ label|e }}</a>
     </li>
   {% endmacro %}
 </nav>
