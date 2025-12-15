@@ -15,8 +15,8 @@ class InfoController extends AbstractController
         return $this->render('info/about.html.twig');
     }
 
-    #[Route('/contact', name: 'app_contact', methods: [Request::METHOD_GET, Request::METHOD_POST])]
-    public function contact(Request $request): Response
+    #[Route('/contact', name: 'app_contact', methods: [Request::METHOD_GET])]
+    public function contact(): Response
     {
         return $this->render('info/contact.html.twig');
     }
