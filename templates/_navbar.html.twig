@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
   <div class="container">
-    <a class="navbar-brand" href="{{ path('app_home') }}">Vet</a>
+    <a class="navbar-brand" href="{{ path('app_home') }}">{{'navBarName'|trans}}</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -8,20 +8,20 @@
     <div class="collapse navbar-collapse" id="mainNavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         {% import _self as nav %}
-        {{ nav.link('app_home', 'Главная') }}
-        {{ nav.link('app_about', 'О проекте') }}
-        {{ nav.link('app_contact', 'Контакты') }}
-        {{ nav.linkStartsWith('app_product', 'Каталог') }}
+        {{ nav.link('app_home', 'navBarMain'|trans) }}
+        {{ nav.link('app_about', 'navBarAbout'|trans) }}
+        {{ nav.link('app_contact', 'navBarContacts'|trans) }}
+        {{ nav.linkStartsWith('app_product', 'navBarCatalog'|trans) }}
       </ul>
 
       <form class="d-flex me-3" method="get" action="{{ path('app_product_index') }}" role="search" aria-label="Поиск по каталогу">
         <input class="form-control form-control-sm me-2"
                type="search"
                name="search"
-               placeholder="Поиск"
+               placeholder={{'navBarPlaceholder'|trans}}
                aria-label="Поиск по каталогу"
                value="{{ app.request.get('search') ?: app.request.get('query') }}">
-        <button class="btn btn-sm btn-outline-primary" type="submit">Найти</button>
+        <button class="btn btn-sm btn-outline-primary" type="submit">{{'navBarSearchButton'|trans}}</button>
       </form>
 
       <div class="d-flex align-items-center">
@@ -30,7 +30,7 @@
           <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">RU</a>
         </div>
 
-        <a class="btn btn-outline-secondary btn-sm" href="#">Вход</a>
+        <a class="btn btn-outline-secondary btn-sm" href="#">{{'navBarLogIn'|trans}}</a>
       </div>
     </div>
   </div>
