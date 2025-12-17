@@ -19,7 +19,7 @@
                type="search"
                name="search"
                placeholder={{'navBarPlaceholder'|trans}}
-               aria-label="Поиск по каталогу"
+               aria-label={{'navBarAria'|trans}}
                value="{{ app.request.get('search') ?: app.request.get('query') }}">
         <button class="btn btn-sm btn-outline-primary" type="submit">{{'navBarSearchButton'|trans}}</button>
       </form>
@@ -30,7 +30,7 @@
           <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">RU</a>
         </div>
 
-        <a class="btn btn-outline-secondary btn-sm" href="#">{{'navBarLogIn'|trans}}</a>
+        <a class="btn btn-outline-secondary btn-sm" href="#">{{'navBarLogIn'|trans}}</a> <!-- should be a button-->
       </div>
     </div>
   </div>
