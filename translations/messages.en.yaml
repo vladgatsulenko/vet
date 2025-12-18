@@ -83,4 +83,5 @@ homePageHello: 'Hello'
 'infoContactFieldEmail': 'Email'
 'infoContactFieldMessage': 'Message'
 'infoContacSendButton': 'Send'
+'navBarLogOut': 'Log out'
 

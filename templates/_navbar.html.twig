@@ -15,12 +15,14 @@
       </ul>
 
       <form class="d-flex me-3" method="get" action="{{ path('app_product_index') }}" role="search" aria-label="Поиск по каталогу">
-        <input class="form-control form-control-sm me-2"
-               type="search"
-               name="search"
-               placeholder={{'navBarPlaceholder'|trans}}
-               aria-label={{'navBarAria'|trans}}
-               value="{{ app.request.get('search') ?: app.request.get('query') }}">
+        <input
+          class="form-control form-control-sm me-2"
+          type="search"
+          name="search"
+          placeholder="{{'navBarPlaceholder'|trans}}"
+          aria-label="{{'navBarAria'|trans}}"
+          value="{{ app.request.get('search') ?: app.request.get('query') }}"
+        >
         <button class="btn btn-sm btn-outline-primary" type="submit">{{'navBarSearchButton'|trans}}</button>
       </form>
 
@@ -30,7 +32,14 @@
           <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">RU</a>
         </div>
 
-        <a class="btn btn-outline-secondary btn-sm" href="#">{{'navBarLogIn'|trans}}</a> <!-- should be a button-->
+        {% if app.user %}
+          <form method="post" action="{{ path('app_logout') }}" class="d-inline" aria-label="Logout">
+            <input type="hidden" name="_token" value="{{ csrf_token('logout') }}">
+            <button type="submit" class="btn btn-outline-secondary btn-sm">{{ 'navBarLogOut'|trans }}</button>
+          </form>
+        {% else %}
+          <a class="btn btn-outline-secondary btn-sm" href="{{ path('app_login') }}">{{ 'navBarLogIn'|trans }}</a>
+        {% endif %}
       </div>
     </div>
   </div>
