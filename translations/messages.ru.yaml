@@ -84,3 +84,5 @@
 'infoContactFieldMessage': 'Сообщение'
 'infoContacSendButton': 'Отправить'
 'navBarLogOut': 'Выйти'
+'productIndexShowButton': 'показать'
+'productIndexEditButton': 'редактировать'

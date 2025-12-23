@@ -21,27 +21,10 @@ final class ProductController extends AbstractController
 
     #[Route(name: 'app_product_index', methods: [Request::METHOD_GET])]
     public function index(
-        Request $request,
-        #[MapQueryParameter] ?string $search = null,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        #[MapQueryParameter] ?string $search = null
     ): Response {
-        if ($search === null) {
-            $rawQ = $request->query->get('query', null);
-            $search = $rawQ !== null ? (string) $rawQ : null;
-        }
-
-        if ($search !== null) {
-            $search = trim($search);
-
-            if ($search === '') {
-                $search = null;
-            } elseif (mb_strlen($search) > self::MAX_SEARCH_LENGTH) {
-                throw new BadRequestHttpException(sprintf(
-                    'Search query is too long (max %d characters).',
-                    self::MAX_SEARCH_LENGTH
-                ));
-            }
-        }
+        $search = $this->normalizeSearch($search);
 
         $products = $productRepository->search($search);
 
@@ -50,11 +33,32 @@ final class ProductController extends AbstractController
         }
 
         return $this->render('product/index.html.twig', [
-            'products' => $products,
-            'search' => $search,
+        'products' => $products,
+        'search' => $search,
         ]);
     }
 
+    private function normalizeSearch(?string $search): ?string
+    {
+        if ($search === null) {
+            return null;
+        }
+
+        $search = trim($search);
+        if ($search === '') {
+            return null;
+        }
+
+        if (mb_strlen($search) > self::MAX_SEARCH_LENGTH) {
+            throw new BadRequestHttpException(sprintf(
+                'Search query is too long (max %d characters).',
+                self::MAX_SEARCH_LENGTH
+            ));
+        }
+
+        return $search;
+    }
+    
     #[Route('/new', name: 'app_product_new', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {

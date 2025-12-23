@@ -84,4 +84,6 @@ homePageHello: 'Hello'
 'infoContactFieldMessage': 'Message'
 'infoContacSendButton': 'Send'
 'navBarLogOut': 'Log out'
+'productIndexShowButton': 'show'
+'productIndexEditButton': 'edit'
 
