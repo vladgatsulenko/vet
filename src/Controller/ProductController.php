@@ -38,27 +38,6 @@ final class ProductController extends AbstractController
         ]);
     }
 
-    private function normalizeSearch(?string $search): ?string
-    {
-        if ($search === null) {
-            return null;
-        }
-
-        $search = trim($search);
-        if ($search === '') {
-            return null;
-        }
-
-        if (mb_strlen($search) > self::MAX_SEARCH_LENGTH) {
-            throw new BadRequestHttpException(sprintf(
-                'Search query is too long (max %d characters).',
-                self::MAX_SEARCH_LENGTH
-            ));
-        }
-
-        return $search;
-    }
-    
     #[Route('/new', name: 'app_product_new', methods: [Request::METHOD_GET, Request::METHOD_POST])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -117,5 +96,26 @@ final class ProductController extends AbstractController
         }
 
         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    private function normalizeSearch(?string $search): ?string
+    {
+        if ($search === null) {
+            return null;
+        }
+
+        $search = trim($search);
+        if ($search === '') {
+            return null;
+        }
+
+        if (mb_strlen($search) > self::MAX_SEARCH_LENGTH) {
+            throw new BadRequestHttpException(sprintf(
+                'Search query is too long (max %d characters).',
+                self::MAX_SEARCH_LENGTH
+            ));
+        }
+
+        return $search;
     }
 }
