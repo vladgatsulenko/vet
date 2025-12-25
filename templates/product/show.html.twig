@@ -5,30 +5,30 @@
 {% block body %}
 <h1>{{ product.name }}</h1>
 
-<p><strong>Кратко:</strong> {{ product.descriptionShort }}</p>
+<p><strong>{{'productShowShort'|trans}}</strong> {{ product.descriptionShort }}</p>
 
 {% if product.descriptionMedium %}
-  <h3>Короткое описание</h3>
+  <h3>{{'productShowShortDescription'|trans}}</h3>
   <div>{{ product.descriptionMedium|raw }}</div>
 {% endif %}
 
 {% if product.descriptionFull %}
-  <h3>Полное описание</h3>
+  <h3>{{'productShowFullDescription'|trans}}</h3>
   <div>{{ product.descriptionFull|raw }}</div>
 {% endif %}
 
 {% if product.ingredients %}
-  <h3>Состав</h3>
+  <h3>{{'productShowComposition'|trans}}</h3>
   <div>{{ product.ingredients|raw }}</div>
 {% endif %}
 
 {% if manual is defined and manual and manual.text is not empty %}
-  <h3>Инструкция</h3>
+  <h3>{{'productShowInstructions'|trans}}</h3>
   <div class="product-manual">{{ manual.text|raw }}</div>
 {% endif %}
 
 <p>
-  <a href="{{ path('app_product_index') }}">Назад к списку</a>
-  <a href="{{ path('app_product_edit', {'id': product.id}) }}">Редактировать</a>
+  <a href="{{ path('app_product_index') }}">{{'productShowBackButton'|trans}}</a>
+  <a href="{{ path('app_product_edit', {'id': product.id}) }}">{{'productShowEditButton'|trans}}</a>
 </p>
 {% endblock %}

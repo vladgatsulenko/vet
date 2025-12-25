@@ -1,31 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.request.locale ?: 'ru' }}">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{{'baseWelcome'|trans}}{% endblock %}</title>
+
+
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+
+        {% block stylesheets %}{% endblock %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
     <body>
-       <header class="text-end p-3">
-            <div class="btn-group" role="group" aria-label="Language switch">
-                <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}"
-                    class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">
-                     English
-                </a>
-                <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}"
-                 class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">
-                    Русский
-                </a>
-            </div>
-        </header>
+        {% include '_navbar.html.twig' %}
 
+        <main class="container py-4">
+            {% block body %}{% endblock %}
+        </main>
 
-        {% block body %}{% endblock %}
+        {% block extra_scripts %}{% endblock %}
     </body>
 </html>

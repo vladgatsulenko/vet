@@ -20,4 +20,33 @@ class ProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Product::class);
     }
+
+    public function search(?string $search): array
+    {
+        $qb = $this->createQueryBuilder('p')
+        ->leftJoin('p.pharmacologicalGroup', 'g')
+        ->leftJoin('p.animalSpecies', 's')
+        ->addSelect('g', 's');
+
+
+        $search = $search !== null ? trim($search) : null;
+        if ($search === '') {
+            $search = null;
+        }
+
+        if ($search !== null) {
+            $term = '%' . mb_strtolower($search) . '%';
+
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    $qb->expr()->like('LOWER(p.name)', ':term'),
+                    $qb->expr()->like('LOWER(p.descriptionShort)', ':term'),
+                    $qb->expr()->like('LOWER(p.descriptionMedium)', ':term')
+                )
+            )
+            ->setParameter('term', $term);
+        }
+
+        return $qb->orderBy('p.name', 'ASC')->getQuery()->getResult();
+    }
 }

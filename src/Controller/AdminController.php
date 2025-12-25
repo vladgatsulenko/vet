@@ -9,10 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpFoundation\Request;
 
 class AdminController extends AbstractController
 {
-    #[Route('/admin/dashboard', name: 'admin_dashboard', methods: ['GET'])]
+    #[Route('/admin/dashboard', name: 'admin_dashboard', methods: [Request::METHOD_GET])]
     public function dashboard(
         UserRepository $userRepository,
         Paginator $paginator,
