@@ -1,58 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{'productIndexTittle'|trans}}{% endblock %}
+{% block title %}{{'productIndexTittle'|trans }}{% endblock %}
 
 {% block body %}
-    <h1>{{'productIndexBody'|trans}}</h1>
+    <h1>{{'productIndexBody'|trans }}</h1>
 
     {% if search is defined and search %}
       <div class="mb-3">
-        <h5 class="mb-1">{{'productIndexSearchResult'|trans}} «{{ search|e }}»</h5>
-        <p class="text-muted small">{{'productIndexSearchFind'|trans}} {{ products|length }}</p>
+        <h5 class="mb-1">{{ 'productIndexSearchResult'|trans }} «{{ search|e }}»</h5>
+        <p class="text-muted small">{{'productIndexSearchFind'|trans }} {{ products|length }}</p>
       </div>
     {% endif %}
 
     {% if products is empty %}
       <div class="alert alert-warning" role="alert">
         {% if search is defined and search %}
-          {{'productIndexRequest'|trans}} «{{ search|e }}» {{'productIndexNoFind'|trans}}
+          {{'productIndexRequest'|trans }} «{{ search|e }}» {{'productIndexNoFind'|trans }}
         {% else %}
-          {{'productIndexNotExisting'|trans}}
+          {{'productIndexNotExisting'|trans }}
         {% endif %}
       </div>
     {% else %}
       <table class="table">
           <thead>
               <tr>
-                  <th>{{'productIndexId'|trans}}</th>
-                  <th>{{'productIndexName'|trans}}</th>
-                  <th>{{'productIndexShortDes'|trans}}</th>
-                  <th>{{'productIndexMediumDes'|trans}}</th>
-                  <th>{{'productIndexFullDes'|trans}}</th>
-                  <th>{{'productIndexIngredients'|trans}}</th>
-                  <th>{{'productIndexProperties'|trans}}</th>
-                  <th>{{'productIndexIndications'|trans}}</th>
-                  <th>{{'productIndexDosage'|trans}}</th>
-                  <th>{{'productIndexRestrictons'|trans}}</th>
-                  <th>{{'productIndexActions'|trans}}</th>
+                  <th>{{ 'productIndexId'|trans }}</th>
+                  <th>{{ 'productIndexName'|trans }}</th>
+                  <th>{{ 'productIndexShortDes'|trans }}</th>
+                  <th>{{ 'productIndexMediumDes'|trans }}</th>
+                  <th>{{ 'productIndexFullDes'|trans }}</th>
+                  <th>{{ 'productIndexIngredients'|trans }}</th>
+                  <th>{{ 'productIndexProperties'|trans }}</th>
+                  <th>{{ 'productIndexIndications'|trans }}</th>
+                  <th>{{ 'productIndexDosage'|trans }}</th>
+                  <th>{{ 'productIndexRestrictons'|trans }}</th>
+                  <th>{{ 'productIndexActions'|trans }}</th>
               </tr>
           </thead>
           <tbody>
           {% for product in products %}
               <tr>
-                  <td>{{ product.id }}</td>
-                  <td>{{ product.name }}</td>
-                  <td>{{ product.descriptionShort }}</td>
-                  <td>{{ product.descriptionMedium }}</td>
-                  <td>{{ product.descriptionFull }}</td>
-                  <td>{{ product.ingredients }}</td>
-                  <td>{{ product.pharmacologicalProperties }}</td>
-                  <td>{{ product.indicationsForUse }}</td>
-                  <td>{{ product.dosageAndAdministration }}</td>
-                  <td>{{ product.restrictions }}</td>
+                  <td>{{product.id }}</td>
+                  <td>{{product.name }}</td>
+                  <td>{{product.descriptionShort }}</td>
+                  <td>{{product.descriptionMedium }}</td>
+                  <td>{{product.descriptionFull }}</td>
+                  <td>{{product.ingredients }}</td>
+                  <td>{{product.pharmacologicalProperties }}</td>
+                  <td>{{product.indicationsForUse }}</td>
+                  <td>{{product.dosageAndAdministration }}</td>
+                  <td>{{product.restrictions }}</td>
                   <td>
-                      <a href="{{ path('app_product_show', {'id': product.id}) }}">{{'productIndexShowButton'|trans}}</a>
-                      <a href="{{ path('app_product_edit', {'id': product.id}) }}">{{'productIndexEditButton'|trans}}</a>
+                      <a href="{{ path('app_product_show', {'id': product.id}) }}">{{'productIndexShowButton'|trans }}</a>
+                      
+                      {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_product_edit', {'id': product.id}) }}">{{'productIndexEditButton'|trans }}</a>
+                      {% endif %}
                   </td>
               </tr>
           {% endfor %}
@@ -60,6 +63,8 @@
       </table>
     {% endif %}
 
-    <a href="{{ path('app_product_new') }}">{{'productIndexCreateButton'|trans}}</a> <!--This button should be avaliable only for admin -->
+    {% if is_granted('ROLE_ADMIN') %}
+      <a class="btn btn-primary" href="{{ path('app_product_new') }}">{{'productIndexCreateButton'|trans }}</a>
+    {% endif %}
 {% endblock %}
 
