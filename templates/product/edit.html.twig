@@ -5,7 +5,7 @@
 {% block body %}
     <h1>{{'productEditBody'|trans}}</h1>
 
-    {{ include('product/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('product/_form.html.twig', {'button_label': 'productEditUpdateButton'|trans}) }}
 
     <a href="{{ path('app_product_index') }}">{{'productEditList'|trans}}</a>
 
