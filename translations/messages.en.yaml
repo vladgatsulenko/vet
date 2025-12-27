@@ -86,4 +86,5 @@ homePageHello: 'Hello'
 'navBarLogOut': 'Log out'
 'productIndexShowButton': 'show'
 'productIndexEditButton': 'edit'
+'productEditUpdateButton': 'Update'
 

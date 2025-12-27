@@ -29,6 +29,8 @@
 
 <p>
   <a href="{{ path('app_product_index') }}">{{'productShowBackButton'|trans}}</a>
-  <a href="{{ path('app_product_edit', {'id': product.id}) }}">{{'productShowEditButton'|trans}}</a>
+  {% if is_granted(roles.ADMIN) %}
+    <a href="{{ path('app_product_edit', {'id': product.id}) }}">{{'productShowEditButton'|trans}}</a>
+  {% endif %}  
 </p>
 {% endblock %}
