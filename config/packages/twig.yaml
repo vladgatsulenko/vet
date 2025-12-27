@@ -1,5 +1,7 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        roles: '@App\Security\RoleProvider'
 
 when@test:
     twig:
