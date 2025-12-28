@@ -1,0 +1,56 @@
+{# templates/catalog/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'catalogTitle'|trans }}{% endblock %}
+
+{% block body %}
+<div class="row">
+  <aside class="col-lg-3 mb-4">
+    <form method="get" action="{{ path('app_catalog_index') }}">
+      <div class="mb-3">
+        <label class="form-label">{{ 'catalog.searchLabel'|trans }}</label>
+        <input type="search" name="search" class="form-control" placeholder="{{ 'catalog.searchPlaceholder'|trans }}" value="{{ search|e }}">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ 'catalog.groupLabel'|trans }}</label>
+        <select name="group" class="form-select">
+          <option value="">{{ 'catalog.groupAny'|trans }}</option>
+          {% for g in groups %}
+            <option value="{{ g.id }}" {{ selectedGroup is not null and selectedGroup == g.id ? 'selected' : '' }}>{{ g.name|e }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">{{ 'catalog.speciesLabel'|trans }}</label>
+        <select name="species" class="form-select">
+          <option value="">{{ 'catalog.speciesAny'|trans }}</option>
+          {% for s in species %}
+            <option value="{{ s.id }}" {{ selectedSpecies is not null and selectedSpecies == s.id ? 'selected' : '' }}>{{ s.name|e }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">{{ 'catalog.filterApply'|trans }}</button>
+        <a href="{{ path('app_catalog_index') }}" class="btn btn-outline-secondary">{{ 'catalog.filterReset'|trans }}</a>
+      </div>
+    </form>
+  </aside>
+
+  <main class="col-lg-9">
+    {% if products is empty %}
+      <div class="alert alert-warning">{{ 'catalog.noResults'|trans }}</div>
+    {% else %}
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        {% for product in products %}
+          <div class="col">
+            {{ include('catalog/_card.html.twig', {'product': product}) }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}
