@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/catalog')]
 final class CatalogController extends AbstractController
 {
+    private const DEFAULT_PAGE = 1;
+    private const PER_PAGE = 12;
+
     #[Route('/', name: 'app_catalog_index', methods: ['GET'])]
     public function index(
         Request $request,
@@ -22,11 +25,23 @@ final class CatalogController extends AbstractController
         AnimalSpeciesRepository $speciesRepository
     ): Response {
         $search = $request->query->get('search', '') !== '' ? trim((string)$request->query->get('search')) : null;
-        $groupId = $request->query->getInt('group') ?: null;
-        $speciesId = $request->query->getInt('species') ?: null;
+        $rawGroup = $request->query->get('group', null);
+        $rawSpecies = $request->query->get('species', null);
 
-        $page = max(1, $request->query->getInt('page', 1));
-        $perPage = 12; // rконстанту сделать
+        $groupId = filter_var(
+            $rawGroup,
+            FILTER_VALIDATE_INT,
+            ['flags' => FILTER_NULL_ON_FAILURE]
+        );
+
+        $speciesId = filter_var(
+            $rawSpecies,
+            FILTER_VALIDATE_INT,
+            ['flags' => FILTER_NULL_ON_FAILURE]
+        );
+
+        $page = max(self::DEFAULT_PAGE, $request->query->getInt('page', self::DEFAULT_PAGE));
+        $perPage = self::PER_PAGE;
 
         $qb = $productRepository->createSearchQueryBuilder($search, $groupId, $speciesId);
 
@@ -58,4 +73,3 @@ final class CatalogController extends AbstractController
         ]);
     }
 }
-

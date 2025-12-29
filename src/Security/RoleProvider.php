@@ -14,5 +14,4 @@ final class RoleProvider
         $this->ADMIN = Role::ADMIN->value;
         $this->USER  = Role::USER->value;
     }
-
 }
