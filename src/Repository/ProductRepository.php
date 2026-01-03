@@ -36,11 +36,11 @@ class ProductRepository extends ServiceEntityRepository
             ->leftJoin('p.animalSpecies', 's')
             ->addSelect('g', 's');
 
-        if ($groupId) {
+        if ($groupId !== null) {
             $qb->andWhere('g.id = :gid')->setParameter('gid', $groupId);
         }
 
-        if ($speciesId) {
+        if ($speciesId !== null) {
             $qb->andWhere('s.id = :sid')->setParameter('sid', $speciesId);
         }
 
@@ -73,5 +73,45 @@ class ProductRepository extends ServiceEntityRepository
     public function search(?string $search): array
     {
         return $this->createSearchQueryBuilder($search)->getQuery()->getResult();
+    }
+
+    /**
+     *
+     * @param string|null $search
+     * @param int|null $groupId
+     * @param int|null $speciesId
+     * @return int
+     */
+    public function countBySearch(?string $search, ?int $groupId = null, ?int $speciesId = null): int
+    {
+        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId);
+
+        $qbCount = clone $qb;
+        $qbCount->select('COUNT(DISTINCT p.id)');
+
+        return (int) $qbCount->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     *
+     * @param int $offset
+     * @param int $limit
+     * @param string|null $search
+     * @param int|null $groupId
+     * @param int|null $speciesId
+     * @return Product[]
+     */
+    public function findPaginatedBySearch(
+        int $offset,
+        int $limit,
+        ?string $search = null,
+        ?int $groupId = null,
+        ?int $speciesId = null
+    ): array {
+        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId);
+        $qb->setFirstResult($offset)
+           ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -5,7 +5,8 @@ namespace App\Controller;
 use App\Repository\ProductRepository;
 use App\Repository\PharmacologicalGroupRepository;
 use App\Repository\AnimalSpeciesRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use App\Service\Paginator;
+use App\Dto\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,43 +23,33 @@ final class CatalogController extends AbstractController
         Request $request,
         ProductRepository $productRepository,
         PharmacologicalGroupRepository $groupRepository,
-        AnimalSpeciesRepository $speciesRepository
+        AnimalSpeciesRepository $speciesRepository,
+        Paginator $paginator
     ): Response {
-        $search = $request->query->get('search', '') !== '' ? trim((string)$request->query->get('search')) : null;
+        $search = $request->query->get('search', '') !== '' ? trim((string) $request->query->get('search')) : null;
         $rawGroup = $request->query->get('group', null);
         $rawSpecies = $request->query->get('species', null);
 
-        $groupId = filter_var(
-            $rawGroup,
-            FILTER_VALIDATE_INT,
-            ['flags' => FILTER_NULL_ON_FAILURE]
-        );
-
-        $speciesId = filter_var(
-            $rawSpecies,
-            FILTER_VALIDATE_INT,
-            ['flags' => FILTER_NULL_ON_FAILURE]
-        );
+        $groupId = filter_var($rawGroup, FILTER_VALIDATE_INT, ['flags' => FILTER_NULL_ON_FAILURE]);
+        $speciesId = filter_var($rawSpecies, FILTER_VALIDATE_INT, ['flags' => FILTER_NULL_ON_FAILURE]);
 
         $page = max(self::DEFAULT_PAGE, $request->query->getInt('page', self::DEFAULT_PAGE));
         $perPage = self::PER_PAGE;
 
-        $qb = $productRepository->createSearchQueryBuilder($search, $groupId, $speciesId);
+        $total = $productRepository->countBySearch($search, $groupId, $speciesId);
 
-        $query = $qb
-            ->getQuery()
-            ->setFirstResult(($page - 1) * $perPage)
-            ->setMaxResults($perPage);
+        $pagination = $paginator->paginate($total, $page, $perPage);
 
-        $paginator = new Paginator($query, true);
-        $total = count($paginator);
-        $pages = (int) ceil($total / $perPage);
+        $products = $productRepository->findPaginatedBySearch(
+            $pagination->offset,
+            $pagination->limit,
+            $search,
+            $groupId,
+            $speciesId
+        );
 
-        // need paginator
-        $products = iterator_to_array($paginator);
-
-        $groups = $groupRepository->findAll();
-        $species = $speciesRepository->findAll();
+        $groups = $groupRepository->findAllOrderedByName();
+        $species = $speciesRepository->findAllOrderedByName();
 
         return $this->render('catalog/index.html.twig', [
             'products' => $products,
@@ -67,9 +58,7 @@ final class CatalogController extends AbstractController
             'species' => $species,
             'selectedGroup' => $groupId,
             'selectedSpecies' => $speciesId,
-            'page' => $page,
-            'pages' => $pages,
-            'total' => $total,
+            'pagination' => $pagination,
         ]);
     }
 }
