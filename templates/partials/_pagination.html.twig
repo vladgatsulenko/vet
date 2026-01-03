@@ -1,4 +1,12 @@
+{% set route = route ?? '' %}
 {% set routeParams = routeParams|default({}) %}
+
+{% set filteredParams = {} %}
+{% for k, v in routeParams %}
+    {% if v is not null and v != '' %}
+        {% set filteredParams = filteredParams|merge({ (k) : v }) %}
+    {% endif %}
+{% endfor %}
 
 {% if pagination is defined %}
     {% set currentPage = pagination.currentPage %}
@@ -13,39 +21,47 @@
     {% set currentPage = currentPage|default(1) %}
     {% set limit = limit|default(10) %}
     {% set totalPages = totalPages|default(1) %}
-    {% set pages = range(1, totalPages) %}
+    {% set pages = pages is defined ? pages : range(1, totalPages) %}
     {% set hasPrevious = currentPage > 1 %}
     {% set hasNext = currentPage < totalPages %}
     {% set previousPage = currentPage > 1 ? currentPage - 1 : null %}
     {% set nextPage = currentPage < totalPages ? currentPage + 1 : null %}
 {% endif %}
 
-
-{% if totalPages <= 1 %}
-
-{% else %}
+{% if totalPages > 1 %}
 <nav aria-label="Page navigation">
   <ul class="pagination">
     <li class="page-item {% if not hasPrevious %}disabled{% endif %}">
-      <a class="page-link" href="{% if hasPrevious %}{{ path(route, routeParams|merge({'page': previousPage, 'limit': limit})) }}{% else %}#{% endif %}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
+      {% if hasPrevious %}
+        <a class="page-link"
+           href="{{ path(route, filteredParams|merge({'page': previousPage, 'limit': limit})) }}"
+           aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      {% else %}
+        <span class="page-link" aria-hidden="true">&laquo;</span>
+      {% endif %}
     </li>
-
-    {% if pages is not defined %}
-        {% set pages = range(1, totalPages) %}
-    {% endif %}
 
     {% for p in pages %}
       <li class="page-item {% if p == currentPage %}active{% endif %}">
-        <a class="page-link" href="{{ path(route, routeParams|merge({'page': p, 'limit': limit})) }}">{{ p }}</a>
+        <a class="page-link"
+           href="{{ path(route, filteredParams|merge({'page': p, 'limit': limit})) }}">
+          {{ p }}
+        </a>
       </li>
     {% endfor %}
 
     <li class="page-item {% if not hasNext %}disabled{% endif %}">
-      <a class="page-link" href="{% if hasNext %}{{ path(route, routeParams|merge({'page': nextPage, 'limit': limit})) }}{% else %}#{% endif %}" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
+      {% if hasNext %}
+        <a class="page-link"
+           href="{{ path(route, filteredParams|merge({'page': nextPage, 'limit': limit})) }}"
+           aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      {% else %}
+        <span class="page-link" aria-hidden="true">&raquo;</span>
+      {% endif %}
     </li>
   </ul>
 </nav>
