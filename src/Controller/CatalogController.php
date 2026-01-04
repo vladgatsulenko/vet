@@ -6,11 +6,12 @@ use App\Repository\ProductRepository;
 use App\Repository\PharmacologicalGroupRepository;
 use App\Repository\AnimalSpeciesRepository;
 use App\Service\Paginator;
-use App\Dto\Pagination;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\ViewModel\CatalogViewModel;
+
 
 #[Route('/catalog')]
 final class CatalogController extends AbstractController
@@ -51,14 +52,18 @@ final class CatalogController extends AbstractController
         $groups = $groupRepository->findAllOrderedByName();
         $species = $speciesRepository->findAllOrderedByName();
 
+        $model = new CatalogViewModel(
+            $products,
+            $search,
+            $groups,
+            $species,
+            $groupId,
+            $speciesId,
+            $pagination
+        );
+
         return $this->render('catalog/index.html.twig', [
-            'products' => $products,
-            'search' => $search,
-            'groups' => $groups,
-            'species' => $species,
-            'selectedGroup' => $groupId,
-            'selectedSpecies' => $speciesId,
-            'pagination' => $pagination,
+            'model' => $model,
         ]);
     }
 }

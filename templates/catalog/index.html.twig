@@ -13,7 +13,7 @@
           name="search"
           class="form-control"
           placeholder="{{ 'catalogSearchPlaceholder'|trans }}"
-          value="{{ search is defined and search ? search : ''|e }}"
+          value="{{ model.search is not null ? model.search|e : '' }}"
         >
       </div>
 
@@ -21,8 +21,8 @@
         <label class="form-label">{{ 'catalogGroupLabel'|trans }}</label>
         <select name="group" class="form-select">
           <option value="">{{ 'catalogGroupAny'|trans }}</option>
-          {% for g in groups %}
-            <option value="{{ g.id }}" {{ selectedGroup is not null and selectedGroup == g.id ? 'selected' : '' }}>
+          {% for g in model.groups %}
+            <option value="{{ g.id }}" {{ model.selectedGroup is not null and model.selectedGroup == g.id ? 'selected' : '' }}>
               {{ g.name|e }}
             </option>
           {% endfor %}
@@ -33,8 +33,8 @@
         <label class="form-label">{{ 'catalogSpeciesLabel'|trans }}</label>
         <select name="species" class="form-select">
           <option value="">{{ 'catalogGroupAny'|trans }}</option>
-          {% for s in species %}
-            <option value="{{ s.id }}" {{ selectedSpecies is not null and selectedSpecies == s.id ? 'selected' : '' }}>
+          {% for s in model.species %}
+            <option value="{{ s.id }}" {{ model.selectedSpecies is not null and model.selectedSpecies == s.id ? 'selected' : '' }}>
               {{ s.name|e }}
             </option>
           {% endfor %}
@@ -49,26 +49,28 @@
   </aside>
 
   <main class="col-lg-9">
-    {% if products is empty %}
+    {% if model.products is empty %}
       <div class="alert alert-warning">{{ 'catalogNoResults'|trans }}</div>
     {% else %}
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
-        {% for product in products %}
+        {% for product in model.products %}
           <div class="col">
             {{ include('catalog/_card.html.twig', {'product': product}) }}
           </div>
         {% endfor %}
       </div>
 
-      {{ include('partials/_pagination.html.twig', {
-          pagination: pagination,
-          route: 'app_catalog_index',
-          routeParams: {
-              search: search,
-              group: selectedGroup,
-              species: selectedSpecies
-          }
-      }) }}
+      {% set routeParams = {
+        search: model.search,
+        group: model.selectedGroup,
+        species: model.selectedSpecies
+      } %}
+
+      {% include 'partials/_pagination.html.twig' with {
+        pagination: model.pagination,
+        route: 'app_catalog_index',
+        routeParams: routeParams
+      } %}
     {% endif %}
   </main>
 </div>
