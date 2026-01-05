@@ -92,6 +92,36 @@ class ProductRepository extends ServiceEntityRepository
         return (int) $qbCount->getQuery()->getSingleScalarResult();
     }
 
+     /**
+     *
+     * @param string $term
+     * @param int $limit
+     * @return Product[]
+     */
+    
+    public function findSuggestions(string $term, int $limit = 10): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->select('p')
+            ->leftJoin('p.pharmacologicalGroup', 'g')
+            ->leftJoin('p.animalSpecies', 's')
+            ->addSelect('g','s')
+            ->where($qbExpr = $this->createQueryBuilder('p')->expr()->like('LOWER(p.name)', ':term'))
+        ;
+
+        $qb = $this->createQueryBuilder('p')
+            ->leftJoin('p.pharmacologicalGroup', 'g')
+            ->leftJoin('p.animalSpecies', 's')
+            ->addSelect('g', 's')
+            ->andWhere('LOWER(p.name) LIKE :term')
+            ->setParameter('term', '%' . mb_strtolower($term) . '%')
+            ->orderBy('p.name', 'ASC')
+            ->setMaxResults($limit);
+
+        return $qb->getQuery()->getResult();
+    }
+
+
     /**
      *
      * @param int $offset

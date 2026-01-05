@@ -5,16 +5,20 @@
 {% block body %}
 <div class="row">
   <aside class="col-lg-3 mb-4">
-    <form method="get" action="{{ path('app_catalog_index') }}">
+    <form method="get" action="{{ path('app_catalog_index') }}" autocomplete="off" novalidate>
       <div class="mb-3">
         <label class="form-label">{{ 'catalogSearchLabel'|trans }}</label>
         <input
+          class="form-control form-control-sm me-2"
           type="search"
           name="search"
-          class="form-control"
-          placeholder="{{ 'catalogSearchPlaceholder'|trans }}"
-          value="{{ model.search is not null ? model.search|e : '' }}"
+          placeholder="{{ 'navBarPlaceholder'|trans }}"
+          aria-label="{{ 'navBarAria'|trans }}"
+          value="{{ app.request.get('search') ?: app.request.get('query') }}"
+          data-autocomplete="product"
+          data-suggest-url="{{ path('app_search_suggest') }}"
         >
+
       </div>
 
       <div class="mb-3">

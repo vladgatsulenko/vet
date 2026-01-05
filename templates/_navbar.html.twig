@@ -16,7 +16,7 @@
       </ul>
 
       <form class="d-flex me-3" method="get" action="{{ path('app_catalog_index') }}" role="search"
-            aria-label="Поиск по каталогу">
+            aria-label="Поиск по каталогу" autocomplete="off" novalidate>
         <input
           class="form-control form-control-sm me-2"
           type="search"
@@ -24,7 +24,10 @@
           placeholder="{{ 'navBarPlaceholder'|trans }}"
           aria-label="{{ 'navBarAria'|trans }}"
           value="{{ app.request.get('search') ?: app.request.get('query') }}"
+          data-autocomplete="product"
+          data-suggest-url="{{ path('app_search_suggest') }}"
         >
+
         <button class="btn btn-sm btn-outline-primary" type="submit">{{ 'navBarSearchButton'|trans }}</button>
       </form>
 
