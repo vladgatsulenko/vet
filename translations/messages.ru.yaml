@@ -98,3 +98,7 @@
 'catalogFilterReset' : 'Сбросить фильтр'
 'catalogNoResults' : 'Ничего не найдено'
 'productCardOpen' : 'Побробнее'
+'catalogManufacturerLabel' : 'Производитель'
+'catalogManufacturersShowMore' : 'ещё'
+'catalogManufacturersShowLess' : 'скрыть'
+'catalogManufacturerNone' : 'Производители не найдены'

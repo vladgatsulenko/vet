@@ -29,12 +29,13 @@ class ProductRepository extends ServiceEntityRepository
      * @param int|null $speciesId
      * @return QueryBuilder
      */
-    public function createSearchQueryBuilder(?string $search, ?int $groupId = null, ?int $speciesId = null): QueryBuilder
+    public function createSearchQueryBuilder(?string $search, ?int $groupId = null, ?int $speciesId = null, ?array $manufacturerIds = null): QueryBuilder
     {
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.pharmacologicalGroup', 'g')
             ->leftJoin('p.animalSpecies', 's')
-            ->addSelect('g', 's');
+            ->leftJoin('p.manufacturer', 'm')
+            ->addSelect('g', 's', 'm');
 
         if ($groupId !== null) {
             $qb->andWhere('g.id = :gid')->setParameter('gid', $groupId);
@@ -42,6 +43,11 @@ class ProductRepository extends ServiceEntityRepository
 
         if ($speciesId !== null) {
             $qb->andWhere('s.id = :sid')->setParameter('sid', $speciesId);
+        }
+
+        if (!empty($manufacturerIds)) {
+            $manufacturerIds = array_values(array_map('intval', $manufacturerIds));
+            $qb->andWhere('m.id IN (:mids)')->setParameter('mids', $manufacturerIds);
         }
 
         $search = $search !== null ? trim($search) : null;
@@ -80,11 +86,12 @@ class ProductRepository extends ServiceEntityRepository
      * @param string|null $search
      * @param int|null $groupId
      * @param int|null $speciesId
+     * @param int[]|null $manufacturerIds
      * @return int
      */
-    public function countBySearch(?string $search, ?int $groupId = null, ?int $speciesId = null): int
+    public function countBySearch(?string $search, ?int $groupId = null, ?int $speciesId = null,  ?array $manufacturerIds = null): int
     {
-        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId);
+        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId, $manufacturerIds);
 
         $qbCount = clone $qb;
         $qbCount->select('COUNT(DISTINCT p.id)');
@@ -129,6 +136,7 @@ class ProductRepository extends ServiceEntityRepository
      * @param string|null $search
      * @param int|null $groupId
      * @param int|null $speciesId
+     * @param int[]|null $manufacturerIds
      * @return Product[]
      */
     public function findPaginatedBySearch(
@@ -136,9 +144,10 @@ class ProductRepository extends ServiceEntityRepository
         int $limit,
         ?string $search = null,
         ?int $groupId = null,
-        ?int $speciesId = null
+        ?int $speciesId = null,
+        ?array $manufacturerIds = null
     ): array {
-        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId);
+        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId, $manufacturerIds);
         $qb->setFirstResult($offset)
            ->setMaxResults($limit);
 
