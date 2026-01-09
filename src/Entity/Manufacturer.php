@@ -13,12 +13,10 @@ class Manufacturer
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private string $name;
-
-    public function __construct(string $name = '')
-    {
-        $this->name = $name;
+    public function __construct(
+        #[ORM\Column(type: 'string', length: 255)]
+        private string $name
+    ) {
     }
 
     public function getId(): ?int
@@ -34,6 +32,7 @@ class Manufacturer
     public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 

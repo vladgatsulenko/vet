@@ -29,7 +29,6 @@ class Product
     #[ORM\ManyToOne(targetEntity: AnimalSpecies::class)]
     #[ORM\JoinColumn(name: "animal_species_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
 
-
     private ?AnimalSpecies $animalSpecies = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -200,7 +199,7 @@ class Product
         return $this;
     }
 
-   public function getManufacturer(): ?Manufacturer
+    public function getManufacturer(): ?Manufacturer
     {
         return $this->manufacturer;
     }
@@ -208,6 +207,7 @@ class Product
     public function setManufacturer(?Manufacturer $manufacturer): self
     {
         $this->manufacturer = $manufacturer;
+        
         return $this;
-    } 
+    }
 }

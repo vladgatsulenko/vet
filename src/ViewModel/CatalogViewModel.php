@@ -9,17 +9,22 @@ use App\Entity\AnimalSpecies;
 use App\Entity\Manufacturer;
 
 /**
- *
  * @psalm-immutable
+ *
+ * @param Product[] $products
+ * @param PharmacologicalGroup[] $groups
+ * @param AnimalSpecies[] $species
+ * @param Manufacturer[] $manufacturers
+ * @param int[] $selectedManufacturers
  */
 final readonly class CatalogViewModel
 {
     /**
-     * @param array<int, Product> $products
-     * @param array<int, PharmacologicalGroup> $groups
-     * @param array<int, AnimalSpecies> $species
+     * @param Product[] $products
+     * @param PharmacologicalGroup[] $groups
+     * @param AnimalSpecies[] $species
+     * @param Manufacturer[] $manufacturers
      * @param int[] $selectedManufacturers
-     * @param array<int, mixed> $manufacturers  // placeholder if you later want to pass full manufacturer entities
      */
     public function __construct(
         public array $products,
@@ -34,3 +39,4 @@ final readonly class CatalogViewModel
     ) {
     }
 }
+

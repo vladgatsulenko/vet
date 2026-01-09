@@ -8,7 +8,7 @@
 
     {% if product.manufacturer is defined and product.manufacturer %}
       <p class="mb-1"><small class="text-muted">
-        {{ 'productManufacturer'|trans }}: {{ product.manufacturer.name|e }}
+        {{ 'catalogManufacturerLabel'|trans }}: {{ product.manufacturer.name|e }}
       </small></p>
     {% endif %}
 

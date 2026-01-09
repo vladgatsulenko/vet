@@ -89,7 +89,7 @@ class ProductRepository extends ServiceEntityRepository
      * @param int[]|null $manufacturerIds
      * @return int
      */
-    public function countBySearch(?string $search, ?int $groupId = null, ?int $speciesId = null,  ?array $manufacturerIds = null): int
+    public function countBySearch(?string $search, ?int $groupId = null, ?int $speciesId = null, ?array $manufacturerIds = null): int
     {
         $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId, $manufacturerIds);
 
@@ -105,14 +105,14 @@ class ProductRepository extends ServiceEntityRepository
      * @param int $limit
      * @return Product[]
      */
-    
+
     public function findSuggestions(string $term, int $limit = 10): array
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p')
             ->leftJoin('p.pharmacologicalGroup', 'g')
             ->leftJoin('p.animalSpecies', 's')
-            ->addSelect('g','s')
+            ->addSelect('g', 's')
             ->where($qbExpr = $this->createQueryBuilder('p')->expr()->like('LOWER(p.name)', ':term'))
         ;
 
