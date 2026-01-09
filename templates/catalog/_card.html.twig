@@ -1,0 +1,25 @@
+<div class="card h-100">
+  {% if product.image is defined and product.image %}
+    <img src="{{ asset(product.image) }}" class="card-img-top" alt="{{ product.name|e }}">
+  {% endif %}
+
+  <div class="card-body d-flex flex-column">
+    <h5 class="card-title">{{ product.name|e }}</h5>
+
+    {% if product.manufacturer is defined and product.manufacturer %}
+      <p class="mb-1"><small class="text-muted">
+        {{ 'catalogManufacturerLabel'|trans }}: {{ product.manufacturer.name|e }}
+      </small></p>
+    {% endif %}
+
+    {% if product.descriptionShort %}
+      <p class="card-text text-muted small">{{ product.descriptionShort|raw }}</p>
+    {% endif %}
+
+    <div class="mt-auto">
+      <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-primary w-100">
+        {{ 'productCardOpen'|trans }}
+      </a>
+    </div>
+  </div>
+</div>

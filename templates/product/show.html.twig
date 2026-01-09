@@ -1,36 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ product.name }}{% endblock %}
+{% block title %}{{ product.name|e }}{% endblock %}
 
 {% block body %}
-<h1>{{ product.name }}</h1>
+  <h1>{{ product.name|e }}</h1>
 
-<p><strong>{{'productShowShort'|trans}}</strong> {{ product.descriptionShort }}</p>
+  {% if product.manufacturer is defined and product.manufacturer %}
+    <p class="mb-2"><small class="text-muted">
+      {{ 'productManufacturer'|trans }}: {{ product.manufacturer.name|e }}
+    </small></p>
+  {% endif %}
 
-{% if product.descriptionMedium %}
-  <h3>{{'productShowShortDescription'|trans}}</h3>
-  <div>{{ product.descriptionMedium|raw }}</div>
-{% endif %}
+  <p><strong>{{ 'productShowShort'|trans }}</strong> {{ product.descriptionShort|raw }}</p>
 
-{% if product.descriptionFull %}
-  <h3>{{'productShowFullDescription'|trans}}</h3>
-  <div>{{ product.descriptionFull|raw }}</div>
-{% endif %}
+  {% if product.descriptionMedium %}
+    <h3>{{ 'productShowShortDescription'|trans }}</h3>
+    <div>{{ product.descriptionMedium|raw }}</div>
+  {% endif %}
 
-{% if product.ingredients %}
-  <h3>{{'productShowComposition'|trans}}</h3>
-  <div>{{ product.ingredients|raw }}</div>
-{% endif %}
+  {% if product.descriptionFull %}
+    <h3>{{ 'productShowFullDescription'|trans }}</h3>
+    <div>{{ product.descriptionFull|raw }}</div>
+  {% endif %}
 
-{% if manual is defined and manual and manual.text is not empty %}
-  <h3>{{'productShowInstructions'|trans}}</h3>
-  <div class="product-manual">{{ manual.text|raw }}</div>
-{% endif %}
+  {% if product.ingredients %}
+    <h3>{{ 'productShowComposition'|trans }}</h3>
+    <div>{{ product.ingredients|raw }}</div>
+  {% endif %}
 
-<p>
-  <a href="{{ path('app_product_index') }}">{{'productShowBackButton'|trans}}</a>
-  {% if is_granted(roles.ADMIN) %}
-    <a href="{{ path('app_product_edit', {'id': product.id}) }}">{{'productShowEditButton'|trans}}</a>
-  {% endif %}  
-</p>
+  {% if manual is defined and manual and manual.text is not empty %}
+    <h3>{{ 'productShowInstructions'|trans }}</h3>
+    <div class="product-manual">{{ manual.text|raw }}</div>
+  {% endif %}
+
+  <p class="mt-3">
+    <a href="{{ path('app_product_index') }}">{{ 'productShowBackButton'|trans }}</a>
+
+    {% if is_granted(roles.ADMIN) %}
+      <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="ms-3">
+        {{ 'productShowEditButton'|trans }}
+      </a>
+    {% endif %}
+  </p>
 {% endblock %}
