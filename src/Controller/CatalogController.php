@@ -26,11 +26,36 @@ final class CatalogController extends AbstractController
         ManufacturerRepository $manufacturerRepository,
         Paginator $paginator
     ): Response {
+        $group = null;
+        if ($query->group !== null) {
+            $group = $groupRepository->find($query->group);
+            if ($group === null) {
+                throw $this->createNotFoundException('Pharmacological group not found.');
+            }
+        }
+
+        $species = null;
+        if ($query->species !== null) {
+            $species = $speciesRepository->find($query->species);
+            if ($species === null) {
+                throw $this->createNotFoundException('Animal species not found.');
+            }
+        }
+
+        $manufacturers = [];
+        if (!empty($query->manufacturers)) {
+            $manufacturers = $manufacturerRepository->findBy(['id' => $query->manufacturers]);
+
+            if (count($manufacturers) !== count(array_unique($query->manufacturers))) {
+                throw $this->createNotFoundException('One or more manufacturers not found.');
+            }
+        }
+
         $total = $productRepository->countBySearch(
             $query->search,
-            $query->group,
-            $query->species,
-            $query->manufacturers
+            $group,
+            $species,
+            $manufacturers
         );
 
         $pagination = $paginator->paginate($total, $query->page, $query->limit);
@@ -39,24 +64,24 @@ final class CatalogController extends AbstractController
             $pagination->offset,
             $pagination->limit,
             $query->search,
-            $query->group,
-            $query->species,
-            $query->manufacturers
+            $group,
+            $species,
+            $manufacturers
         );
 
         $groups = $groupRepository->findAllOrderedByName();
-        $species = $speciesRepository->findAllOrderedByName();
-        $manufacturers = $manufacturerRepository->findAllOrderedByName();
+        $speciesList = $speciesRepository->findAllOrderedByName();
+        $manufacturersList = $manufacturerRepository->findAllOrderedByName();
 
         $model = new CatalogViewModel(
             $products,
             $query->search,
             $groups,
-            $species,
-            $manufacturers,
-            $query->group,
-            $query->species,
-            $query->manufacturers,
+            $speciesList,
+            $manufacturersList,
+            $group?->getId(),
+            $species?->getId(),
+            array_map(fn($m) => $m->getId(), $manufacturers),
             $pagination
         );
 

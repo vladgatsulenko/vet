@@ -9,12 +9,8 @@ final class CatalogQuery
     public const DEFAULT_PAGE = 1;
     public const DEFAULT_LIMIT = 12;
 
-    public ?string $search;
-    public ?int $group;
-    public ?int $species;
-
-    /** @var int[] */
-    public array $manufacturers;
+    /** @var int[] Normalized manufacturer ids */
+    public array $manufacturers = [];
 
     public int $page;
     public int $limit;
@@ -23,18 +19,15 @@ final class CatalogQuery
      * @param array|int|string|null $manufacturers Raw manufacturers value from query (can be scalar or array)
      */
     public function __construct(
-        ?string $search = null,
-        ?int $group = null,
-        ?int $species = null,
+        public ?string $search = null,
+        public ?int $group = null,
+        public ?int $species = null,
         $manufacturers = null,
         ?int $page = null,
         ?int $limit = null
     ) {
-        $s = $search !== null ? trim($search) : null;
+        $s = $this->search !== null ? trim($this->search) : null;
         $this->search = ($s === '') ? null : $s;
-
-        $this->group = $group;
-        $this->species = $species;
 
         $raw = $manufacturers ?? [];
         if (!is_array($raw)) {
@@ -50,7 +43,7 @@ final class CatalogQuery
         }
         $this->manufacturers = array_values($ids);
 
-        $this->page = max(1, (int) ($page ?? self::DEFAULT_PAGE));
-        $this->limit = max(1, (int) ($limit ?? self::DEFAULT_LIMIT));
+        $this->page = max(1, ($page ?? self::DEFAULT_PAGE));
+        $this->limit = max(1, ($limit ?? self::DEFAULT_LIMIT));
     }
 }

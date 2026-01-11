@@ -3,6 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\PharmacologicalGroup;
+use App\Entity\AnimalSpecies;
+use App\Entity\Manufacturer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
@@ -23,31 +26,42 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
+     * Build search QueryBuilder.
      *
      * @param string|null $search
-     * @param int|null $groupId
-     * @param int|null $speciesId
+     * @param PharmacologicalGroup|null $group
+     * @param AnimalSpecies|null $species
+     * @param Manufacturer[]|int[]|null $manufacturers array of Manufacturer entities OR array of ids (int)
      * @return QueryBuilder
      */
-    public function createSearchQueryBuilder(?string $search, ?int $groupId = null, ?int $speciesId = null, ?array $manufacturerIds = null): QueryBuilder
-    {
+    public function createSearchQueryBuilder(
+        ?string $search,
+        ?PharmacologicalGroup $group = null,
+        ?AnimalSpecies $species = null,
+        ?array $manufacturers = null
+    ): QueryBuilder {
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.pharmacologicalGroup', 'g')
             ->leftJoin('p.animalSpecies', 's')
             ->leftJoin('p.manufacturer', 'm')
             ->addSelect('g', 's', 'm');
 
-        if ($groupId !== null) {
-            $qb->andWhere('g.id = :gid')->setParameter('gid', $groupId);
+        if ($group !== null) {
+            $qb->andWhere('g = :group')->setParameter('group', $group);
         }
 
-        if ($speciesId !== null) {
-            $qb->andWhere('s.id = :sid')->setParameter('sid', $speciesId);
+        if ($species !== null) {
+            $qb->andWhere('s = :species')->setParameter('species', $species);
         }
 
-        if (!empty($manufacturerIds)) {
-            $manufacturerIds = array_values(array_map('intval', $manufacturerIds));
-            $qb->andWhere('m.id IN (:mids)')->setParameter('mids', $manufacturerIds);
+        if (!empty($manufacturers)) {
+            $first = reset($manufacturers);
+            if ($first instanceof Manufacturer) {
+                $qb->andWhere('m IN (:manufacturers)')->setParameter('manufacturers', $manufacturers);
+            } else {
+                $ids = array_values(array_map('intval', $manufacturers));
+                $qb->andWhere('m.id IN (:manufacturers)')->setParameter('manufacturers', $ids);
+            }
         }
 
         $search = $search !== null ? trim($search) : null;
@@ -72,6 +86,7 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
+     * Shortcut for full-text-ish search (keeps BC).
      *
      * @param string|null $search
      * @return Product[]
@@ -82,16 +97,21 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
+     * Count matching products.
      *
      * @param string|null $search
-     * @param int|null $groupId
-     * @param int|null $speciesId
-     * @param int[]|null $manufacturerIds
+     * @param PharmacologicalGroup|null $group
+     * @param AnimalSpecies|null $species
+     * @param Manufacturer[]|int[]|null $manufacturers
      * @return int
      */
-    public function countBySearch(?string $search, ?int $groupId = null, ?int $speciesId = null, ?array $manufacturerIds = null): int
-    {
-        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId, $manufacturerIds);
+    public function countBySearch(
+        ?string $search,
+        ?PharmacologicalGroup $group = null,
+        ?AnimalSpecies $species = null,
+        ?array $manufacturers = null
+    ): int {
+        $qb = $this->createSearchQueryBuilder($search, $group, $species, $manufacturers);
 
         $qbCount = clone $qb;
         $qbCount->select('COUNT(DISTINCT p.id)');
@@ -99,23 +119,15 @@ class ProductRepository extends ServiceEntityRepository
         return (int) $qbCount->getQuery()->getSingleScalarResult();
     }
 
-     /**
+    /**
+     * Suggestions for autocomplete.
      *
      * @param string $term
      * @param int $limit
      * @return Product[]
      */
-
     public function findSuggestions(string $term, int $limit = 10): array
     {
-        $qb = $this->createQueryBuilder('p')
-            ->select('p')
-            ->leftJoin('p.pharmacologicalGroup', 'g')
-            ->leftJoin('p.animalSpecies', 's')
-            ->addSelect('g', 's')
-            ->where($qbExpr = $this->createQueryBuilder('p')->expr()->like('LOWER(p.name)', ':term'))
-        ;
-
         $qb = $this->createQueryBuilder('p')
             ->leftJoin('p.pharmacologicalGroup', 'g')
             ->leftJoin('p.animalSpecies', 's')
@@ -128,26 +140,26 @@ class ProductRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-
     /**
+     * Paginated search results.
      *
      * @param int $offset
      * @param int $limit
      * @param string|null $search
-     * @param int|null $groupId
-     * @param int|null $speciesId
-     * @param int[]|null $manufacturerIds
+     * @param PharmacologicalGroup|null $group
+     * @param AnimalSpecies|null $species
+     * @param Manufacturer[]|int[]|null $manufacturers
      * @return Product[]
      */
     public function findPaginatedBySearch(
         int $offset,
         int $limit,
         ?string $search = null,
-        ?int $groupId = null,
-        ?int $speciesId = null,
-        ?array $manufacturerIds = null
+        ?PharmacologicalGroup $group = null,
+        ?AnimalSpecies $species = null,
+        ?array $manufacturers = null
     ): array {
-        $qb = $this->createSearchQueryBuilder($search, $groupId, $speciesId, $manufacturerIds);
+        $qb = $this->createSearchQueryBuilder($search, $group, $species, $manufacturers);
         $qb->setFirstResult($offset)
            ->setMaxResults($limit);
 

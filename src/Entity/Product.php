@@ -207,7 +207,7 @@ class Product
     public function setManufacturer(?Manufacturer $manufacturer): self
     {
         $this->manufacturer = $manufacturer;
-        
+
         return $this;
     }
 }
