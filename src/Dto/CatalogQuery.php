@@ -9,41 +9,24 @@ final class CatalogQuery
     public const DEFAULT_PAGE = 1;
     public const DEFAULT_LIMIT = 12;
 
-    /** @var int[] Normalized manufacturer ids */
-    public array $manufacturers = [];
-
-    public int $page;
-    public int $limit;
-
     /**
-     * @param array|int|string|null $manufacturers Raw manufacturers value from query (can be scalar or array)
+     * @param int[] $manufacturers Normalized manufacturer ids
      */
     public function __construct(
         public ?string $search = null,
         public ?int $group = null,
         public ?int $species = null,
-        $manufacturers = null,
-        ?int $page = null,
-        ?int $limit = null
+        #[Assert\All(new Assert\Type('integer'))]
+        public array $manufacturers = [],
+        public int $page = self::DEFAULT_PAGE,
+        public int $limit = self::DEFAULT_LIMIT
     ) {
-        $s = $this->search !== null ? trim($this->search) : null;
-        $this->search = ($s === '') ? null : $s;
-
-        $raw = $manufacturers ?? [];
-        if (!is_array($raw)) {
-            $raw = ($raw === null) ? [] : [$raw];
+        $this->search = $this->search !== null ? trim($this->search) : null;
+        if ($this->search === '') {
+            $this->search = null;
         }
 
-        $ids = [];
-        foreach ($raw as $v) {
-            $val = filter_var($v, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
-            if ($val !== null) {
-                $ids[] = $val;
-            }
-        }
-        $this->manufacturers = array_values($ids);
-
-        $this->page = max(1, ($page ?? self::DEFAULT_PAGE));
-        $this->limit = max(1, ($limit ?? self::DEFAULT_LIMIT));
+        $this->page = max(1, $this->page);
+        $this->limit = max(1, $this->limit);
     }
 }
