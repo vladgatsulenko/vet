@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use App\Entity\Manufacturer;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -17,12 +18,17 @@ class Product
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\ManyToOne(targetEntity: Manufacturer::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Manufacturer $manufacturer = null;
+
     #[ORM\ManyToOne(targetEntity: PharmacologicalGroup::class)]
     #[ORM\JoinColumn(name: "pharmacological_group_id", referencedColumnName: "id", nullable: false, onDelete: "RESTRICT")]
     private PharmacologicalGroup $pharmacologicalGroup;
 
     #[ORM\ManyToOne(targetEntity: AnimalSpecies::class)]
     #[ORM\JoinColumn(name: "animal_species_id", referencedColumnName: "id", nullable: true, onDelete: "SET NULL")]
+
     private ?AnimalSpecies $animalSpecies = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -189,6 +195,18 @@ class Product
     public function setRestrictions(?string $restrictions): self
     {
         $this->restrictions = $restrictions;
+
+        return $this;
+    }
+
+    public function getManufacturer(): ?Manufacturer
+    {
+        return $this->manufacturer;
+    }
+
+    public function setManufacturer(?Manufacturer $manufacturer): self
+    {
+        $this->manufacturer = $manufacturer;
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Entity\Manufacturer;
 
 class ProductType extends AbstractType
 {
@@ -32,6 +33,12 @@ class ProductType extends AbstractType
             ->add('animalSpecies', EntityType::class, [
                 'class' => AnimalSpecies::class,
                 'choice_label' => 'name',
+                'required' => false,
+            ])
+            ->add('manufacturer', EntityType::class, [
+                'class' => Manufacturer::class,
+                'choice_label' => 'name',
+                'placeholder' => '—',
                 'required' => false,
             ])
         ;

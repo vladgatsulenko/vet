@@ -6,7 +6,7 @@ use App\Dto\Pagination;
 
 final class Paginator
 {
-    public const PAGES_VISABLE = 7;
+    public const PAGES_VISABLE = 4;
     public const MAX_LIMIT = 100;
 
     public function paginate(int $total, int $page, int $limit, int $maxVisible = self::PAGES_VISABLE): Pagination

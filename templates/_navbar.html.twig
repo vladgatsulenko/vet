@@ -1,7 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
   <div class="container">
-    <a class="navbar-brand" href="{{ path('app_home') }}">{{'navBarName'|trans}}</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand" href="{{ path('app_home') }}">{{ 'navBarName'|trans }}</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+            aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -11,25 +12,31 @@
         {{ nav.link('app_home', 'navBarMain'|trans) }}
         {{ nav.link('app_about', 'navBarAbout'|trans) }}
         {{ nav.link('app_contact', 'navBarContacts'|trans) }}
-        {{ nav.linkStartsWith('app_product', 'navBarCatalog'|trans) }}
+        {{ nav.linkStartsWith('app_catalog', 'navBarCatalog'|trans) }}
       </ul>
 
-      <form class="d-flex me-3" method="get" action="{{ path('app_product_index') }}" role="search" aria-label="Поиск по каталогу">
+      <form class="d-flex me-3" method="get" action="{{ path('app_catalog_index') }}" role="search"
+            aria-label="Поиск по каталогу" autocomplete="off" novalidate>
         <input
           class="form-control form-control-sm me-2"
           type="search"
           name="search"
-          placeholder="{{'navBarPlaceholder'|trans}}"
-          aria-label="{{'navBarAria'|trans}}"
+          placeholder="{{ 'navBarPlaceholder'|trans }}"
+          aria-label="{{ 'navBarAria'|trans }}"
           value="{{ app.request.get('search') ?: app.request.get('query') }}"
+          data-autocomplete="product"
+          data-suggest-url="{{ path('app_search_suggest') }}"
         >
-        <button class="btn btn-sm btn-outline-primary" type="submit">{{'navBarSearchButton'|trans}}</button>
+
+        <button class="btn btn-sm btn-outline-primary" type="submit">{{ 'navBarSearchButton'|trans }}</button>
       </form>
 
       <div class="d-flex align-items-center">
         <div class="btn-group me-2" role="group" aria-label="Language switch">
-          <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">EN</a>
-          <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}" class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">RU</a>
+          <a href="{{ path('app_switch_language', {'_locale': 'en'}) }}"
+             class="btn btn-outline-primary {% if app.request.locale == 'en' %}active{% endif %}">EN</a>
+          <a href="{{ path('app_switch_language', {'_locale': 'ru'}) }}"
+             class="btn btn-outline-primary {% if app.request.locale == 'ru' %}active{% endif %}">RU</a>
         </div>
 
         {% if app.user %}
@@ -47,7 +54,9 @@
   {% macro link(route, label) %}
     {% set current = app.request.attributes.get('_route') == route %}
     <li class="nav-item">
-      <a class="nav-link {{ current ? 'active' }}" href="{{ path(route) }}" {{ current ? 'aria-current="page"' : '' }}>{{ label|e }}</a>
+      <a class="nav-link {{ current ? 'active' }}" href="{{ path(route) }}" {{ current ? 'aria-current="page"' : '' }}>
+        {{ label|e }}
+      </a>
     </li>
   {% endmacro %}
 
@@ -55,7 +64,10 @@
     {% set r = app.request.attributes.get('_route') %}
     {% set current = r is not empty and r starts with(prefix) %}
     <li class="nav-item">
-      <a class="nav-link {{ current ? 'active' }}" href="{{ path('app_product_index') }}" {{ current ? 'aria-current="page"' : '' }}>{{ label|e }}</a>
+      <a class="nav-link {{ current ? 'active' }}" href="{{ path('app_catalog_index') }}"
+         {{ current ? 'aria-current="page"' : '' }}>
+        {{ label|e }}
+      </a>
     </li>
   {% endmacro %}
 </nav>
